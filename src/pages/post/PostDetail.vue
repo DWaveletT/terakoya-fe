@@ -59,7 +59,7 @@
             </el-main>
 
             <aside class="aside">
-                    
+
                 <el-affix :offset="30">
                     <c-info-card>
 
@@ -107,7 +107,7 @@
     </common-layout>
 
     <user-login v-model="showLogin" />
-    
+
     <el-backtop :right="50" :bottom="50" />
     <!-- <c-nav-side /> -->
 </template>
@@ -127,7 +127,7 @@ import CInfoCard from '@/components/common/CInfoCard.vue';
 
 import CUsername from '@/components/user/CUsername.vue';
 
-import UserLogin from '../auth/UserLogin.vue';
+import UserLogin from '../../components/user/UserLogin.vue';
 
 import TextRender from '@/components/text/TextRender.vue';
 import TextEditor from '@/components/text/TextEditor.vue';
@@ -177,7 +177,6 @@ function scrollToReply() {
 </script>
 
 <style scoped lang="scss">
-
 .main-container {
     justify-content: center;
 }
@@ -260,7 +259,7 @@ function scrollToReply() {
     align-items: center;
     justify-content: center;
 
-    > .please-login {
+    >.please-login {
         user-select: none;
 
         font-size: x-large;

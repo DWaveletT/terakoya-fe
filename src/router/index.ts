@@ -1,7 +1,7 @@
 import DashBoard from '@/pages/admin/DashBoard.vue'
-import UserCreate from '@/pages/auth/UserCreate.vue'
+import UserCreate from '@/components/user/UserCreate.vue'
 import UserHome from '@/pages/auth/UserHome.vue'
-import UserLogin from '@/pages/auth/UserLogin.vue'
+import UserLogin from '@/components/user/UserLogin.vue'
 import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
 import PostDetail from '@/pages/post/PostDetail.vue'
@@ -14,16 +14,6 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: ForumHome
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: UserLogin
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: UserCreate
     },
     {
       path: '/detail',
