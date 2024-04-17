@@ -71,6 +71,7 @@ const password2 = ref('');
     max-width: 1080px;
 
     margin: 1em auto;
+    flex: 1;
 }
 
 .button-container {

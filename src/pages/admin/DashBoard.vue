@@ -7,23 +7,23 @@
                     style="min-height: 100%"
                 >
                     <el-menu-item index="0">
-                        <font-awesome-icon :icon="faUser" style="margin-right: 1em;" />
+                        <font-awesome-icon :icon="faList" style="margin: 0 1em;" />
                         <span>首页</span>
                     </el-menu-item>
                     <el-menu-item index="1">
-                        <font-awesome-icon :icon="faUser" style="margin-right: 1em;" />
+                        <font-awesome-icon :icon="faUser" style="margin: 0 1em;" />
                         <span>用户</span>
                     </el-menu-item>
                     <el-menu-item index="2">
-                        <font-awesome-icon :icon="faPaperPlane" style="margin-right: 1em;" />
+                        <font-awesome-icon :icon="faPaperPlane" style="margin: 0 1em;" />
                         <span>帖子</span>
                     </el-menu-item>
                     <el-menu-item index="3">
-                        <font-awesome-icon :icon="faComment" style="margin-right: 1em;" />
+                        <font-awesome-icon :icon="faComment" style="margin: 0 1em;" />
                         <span>回复</span>
                     </el-menu-item>
                     <el-menu-item index="4">
-                        <font-awesome-icon :icon="faFolder" style="margin-right: 1em;" />
+                        <font-awesome-icon :icon="faFolder" style="margin: 0 1em;" />
                         <span>版块</span>
                     </el-menu-item>
                 </el-menu>
@@ -44,7 +44,7 @@ import CommonLayout from '@/components/layout/CommonLayout.vue';
 import { ElMenu, ElSubMenu, ElMenuItem, ElMenuItemGroup, ElRow, ElCol, ElCard } from 'element-plus';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faUser, faComment, faPaperPlane, faFolder } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faComment, faPaperPlane, faFolder, faList } from '@fortawesome/free-solid-svg-icons';
 
 import { ref } from 'vue';
 
