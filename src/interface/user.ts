@@ -4,8 +4,7 @@ interface User {
     id: UserId,
 
     name: string,
-    status: number,
-    avatar: string,
+    role: number,
 }
 
 export type { User };

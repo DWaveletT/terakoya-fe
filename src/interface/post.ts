@@ -1,18 +1,31 @@
-import type { PostId, ReplyId } from "./enum";
+import type { BoardId, PostId, ReplyId } from "./enum";
+import type { User } from "./user";
 
 interface Post {
     id: PostId,
-    subject: number,
+    time: number,
+    
+    poster: User,
 
-    poster: number,
-    status: number,
+    board: BoardId,
+
     title: string,
-    description: string,
+    content: string,
+
+    like: number,
+    dislike: number,
 };
 
 interface Reply {
     id: ReplyId,
+    time: number,
+    
+    replyer: User,
+
+    post: PostId,
+
     content: string,
+
     like: number,
     dislike: number,
 };

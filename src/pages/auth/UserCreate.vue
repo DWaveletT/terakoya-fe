@@ -31,6 +31,7 @@
         </el-form>
 
         <div class="submit-area">
+            <el-link @click="emit('requestLogin')">直接登录</el-link>
             <el-button type="primary">提交</el-button>
         </div>
         
@@ -41,11 +42,15 @@
 import { ElDialog } from 'element-plus';
 import { ElForm, ElInput, ElFormItem, ElButton } from 'element-plus';
 
-import { ElSpace, ElLink, ElTooltip, ElDivider } from 'element-plus';
+import { ElLink, ElTooltip, ElDivider } from 'element-plus';
 
 import { ref } from 'vue';
 
-const show = ref(true);
+const show = defineModel<boolean>({ required: true });
+
+const emit = defineEmits<{
+    requestLogin: []
+}>();
 
 const username = ref('');
 const password1 = ref('');
@@ -64,7 +69,7 @@ const tooltips = {
 .submit-area {
     display: flex;
 
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
 

@@ -1,4 +1,6 @@
+import DashBoard from '@/pages/admin/DashBoard.vue'
 import UserCreate from '@/pages/auth/UserCreate.vue'
+import UserHome from '@/pages/auth/UserHome.vue'
 import UserLogin from '@/pages/auth/UserLogin.vue'
 import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
@@ -29,9 +31,14 @@ const router = createRouter({
       component: PostDetail
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: DashBoard
+    },
+    {
       path: '/test',
       name: 'test',
-      component: TestPage
+      component: UserHome
     }
     // {
     //   path: '/about',

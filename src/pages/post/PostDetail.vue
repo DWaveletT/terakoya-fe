@@ -41,7 +41,15 @@
 
                 <el-card shadow="hover">
                     <h3 style="margin: 0;">回复帖子</h3>
-                    <text-editor v-model="replyContent" />
+
+                    <template v-if="isLoggedIn">
+                        <text-editor v-model="replyContent" />
+                    </template>
+                    <template v-else>
+                        <div class="login-area" @click="showLogin = true">
+                            <span class="please-login">请先登录</span>
+                        </div>
+                    </template>
 
                     <div class="reply-buttons">
                         <el-button type="danger" plain>清除</el-button>
@@ -97,6 +105,8 @@
             </aside>
         </el-container>
     </common-layout>
+
+    <user-login v-model="showLogin" />
     
     <el-backtop :right="50" :bottom="50" />
     <!-- <c-nav-side /> -->
@@ -117,25 +127,28 @@ import CInfoCard from '@/components/common/CInfoCard.vue';
 
 import CUsername from '@/components/user/CUsername.vue';
 
+import UserLogin from '../auth/UserLogin.vue';
+
 import TextRender from '@/components/text/TextRender.vue';
 import TextEditor from '@/components/text/TextEditor.vue';
 
-import { ElContainer, ElAside, ElMain } from 'element-plus';
-import { ElCard, ElButton, ElPagination, ElAffix, ElDivider, ElBacktop, ElSpace } from 'element-plus';
+import { ElContainer, ElMain } from 'element-plus';
+import { ElCard, ElButton, ElPagination, ElAffix, ElDivider, ElBacktop } from 'element-plus';
 
 import { ref } from 'vue';
 
 const testUser = ref<User>({
     id: 1,
     name: '椛儿',
-    avatar: '/src/assets/1.png',
-    status: 1
+    role: 1
 });
 
 const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 const reply = ref<HTMLElement>(null!);
 const replyContent = ref('');
+
+const showLogin = ref(false);
 
 const text1 = `
 # 大家好啊
@@ -154,6 +167,8 @@ const text1 = `
 `;
 
 const text2 = `这个是占位置用的文本。`;
+
+const isLoggedIn = ref(false);
 
 function scrollToReply() {
     reply.value.scrollIntoView({ behavior: 'smooth' });
@@ -227,5 +242,29 @@ function scrollToReply() {
 
     justify-content: space-between;
     margin-top: 1em;
+}
+
+.login-area {
+    cursor: pointer;
+
+    background-color: var(--el-color-info-light-9);
+    border: 1px solid var(--el-color-info);
+
+    height: 10em;
+
+    border-radius: 4px;
+
+    margin-top: 0.5em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > .please-login {
+        user-select: none;
+
+        font-size: x-large;
+        font-weight: lighter;
+    }
 }
 </style>

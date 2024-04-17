@@ -23,6 +23,7 @@
                 resize="none"
                 type="textarea"
                 placeholder="请在此处回复，支持使用 Markdown。"
+                :disabled="prop.disabled"
             />
         </template>
     </div>
@@ -36,6 +37,12 @@ import TextRender from './TextRender.vue';
 import { ref } from 'vue';
 
 const text = defineModel<string>({ required: true });
+
+const prop = withDefaults(defineProps<{
+    disabled: boolean
+}>(), {
+    disabled: false
+});
 
 const preview = ref(false);
 
