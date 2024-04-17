@@ -24,9 +24,14 @@ const router = createRouter({
       component: UserCreate
     },
     {
+      path: '/detail',
+      name: 'detail',
+      component: PostDetail
+    },
+    {
       path: '/test',
       name: 'test',
-      component: PostDetail
+      component: TestPage
     }
     // {
     //   path: '/about',

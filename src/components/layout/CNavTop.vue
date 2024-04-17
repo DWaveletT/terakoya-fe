@@ -15,11 +15,13 @@
             </div>
         </el-menu>
     </el-affix>
+
 </template>
 
 <script setup lang="ts">
 import { ElAffix, ElMenu, ElMenuItem } from 'element-plus';
 
+import { ref } from 'vue';
 </script>
 
 <style scoped lang="scss">
@@ -28,6 +30,11 @@ import { ElAffix, ElMenu, ElMenuItem } from 'element-plus';
     flex-direction: row;
     background-color: var(--el-color-primary-light-5);
     opacity: 0.5;
+
+    transition: transform 0.2s ease-in-out;
 }
 
+.hide {
+    transform: translateY(-60px);
+}
 </style>

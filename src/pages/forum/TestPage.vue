@@ -1,36 +1,50 @@
 <template>
-    <div>
-        <h2>测试页面</h2>
+    <p v-for="i in [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, ]">
+    asdasd
+    </p>
+    <!-- <div class="affix-container"> -->
+    <!-- </div> -->
 
-        <c-bubble
-            :user="testUser"
-        >
-            <template #header>
-                我是 header
-            </template>
-            <template #message>
-                我是一条信息
-            </template>
-        </c-bubble>
-    </div>
-</template>
+    <p v-for="i in [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, ]">
+    asdasd
+    </p>
+    
+    <el-backtop :right="50" :bottom="50" />
+  </template>
 
 <script setup lang="ts">
-import CBubble from '@/components/common/CBubble.vue';
 
-import type { User } from '@/interface';
+import CommonLayout from '@/components/layout/CommonLayout.vue';
+
+import { ElAffix, ElButton, ElBacktop, ElContainer, ElMain, ElAside } from 'element-plus';
 
 import { ref } from 'vue';
 
-const testUser = ref<User>({
-    id: 1,
-    name: '椛儿',
-    avatar: '/src/assets/1.png',
-    status: 1
-});
+const list = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+    1, 2, 3, 4, 5, 6, 7, 8, 9,
+];
+
+const affix = ref<InstanceType<typeof ElAffix>>(null!);
+
+function update() {
+    console.log('hello');
+
+    affix.value.update();
+    affix.value.updateRoot();
+}
+
 </script>
 
 <style scoped lang="scss">
-
-
+.affix-container {
+  text-align: center;
+  height: 400px;
+  border-radius: 4px;
+  background: var(--el-color-primary-light-9);
+}
 </style>
