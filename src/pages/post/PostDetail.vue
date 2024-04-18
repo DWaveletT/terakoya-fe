@@ -116,8 +116,6 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from '@/interface';
-
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faThumbsUp, faThumbsDown, faUser, faComment, faClock } from '@fortawesome/free-regular-svg-icons';
 // import { faReply } from '@fortawesome/free-solid-svg-icons';

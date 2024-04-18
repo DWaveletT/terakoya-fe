@@ -13,3 +13,11 @@ body {
         margin: 0.8em 0;
     }
 }
+
+.title {
+    font-weight: lighter;
+
+    color: var(--el-color-primary);
+
+    margin: 0.5em 0;
+}

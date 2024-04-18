@@ -2,7 +2,7 @@
     <el-container class="full-container" :class="{ 'normal-style': !prop.admin, 'admin-style': prop.admin }">
         <el-header height="100px" class="header">
             <div class="content">
-                <div class="title">
+                <div>
                     <el-breadcrumb separator="/" style="margin-top: 1em;">
                         <el-breadcrumb-item v-for="i in prop.bread" :key="i" >{{ i }}</el-breadcrumb-item>
                     </el-breadcrumb>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElContainer, ElHeader, ElFooter, ElText, ElBreadcrumb, ElBreadcrumbItem, ElAvatar, ElTooltip } from 'element-plus';
+import { ElContainer, ElHeader, ElFooter, ElBreadcrumb, ElBreadcrumbItem, ElAvatar } from 'element-plus';
 
 const prop = withDefaults(defineProps<{
     admin?: boolean,

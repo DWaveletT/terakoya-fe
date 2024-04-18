@@ -6,8 +6,8 @@
             <div class="center">
                 <img src="/404.png" width="300px">
 
-                <h2 class="info">你来到了不存在的页面……</h2>
-                <h3 class="info">满身疮痍</h3>
+                <h2 class="title">你来到了不存在的页面……</h2>
+                <h3 class="title">满身疮痍</h3>
             </div>
         </el-card>
     </common-layout>
@@ -32,8 +32,4 @@ import { ElCard } from 'element-plus';
     text-align: center;
 }
 
-.info {
-    font-weight: lighter;
-    color: var(--el-color-primary);
-}
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="content">
-        <div class="bubble" :style="{'--border-color': borderColor}">
+        <div class="bubble" :style="{'--border-color': props.borderColor}">
             <div class="header">
                 <div class="avatar">
-                    <el-avatar :src="'/usericon/' + `${props.user.id}.png`" :size="48" />
+                    <c-avatar :user="props.user" />
                 </div>
                 <slot name="header" />
             </div>
@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import type { User } from '@/interface';
 
-import { ElAvatar } from 'element-plus';
+import CAvatar from './CAvatar.vue';
 
 const props = withDefaults(defineProps<{
     user: User,
