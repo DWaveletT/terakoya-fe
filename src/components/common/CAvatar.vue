@@ -9,7 +9,7 @@ import { ElAvatar } from 'element-plus';
 
 const props = withDefaults(defineProps<{
     user: User,
-    size: number
+    size?: number
 }>(),{
     size: 48
 });

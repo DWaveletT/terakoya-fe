@@ -11,10 +11,14 @@
                 </div>
             </div>
             
-            <div class="user">
-                <el-avatar :size="40" />
-                <div style="margin-left: 0.5em;">你的名字是</div>
-            </div>
+            <router-link to="/user/home">
+                <div class="user">
+                    <c-avatar :user="auth.currentUser" />
+
+                        <div style="margin-left: 0.5em;">{{ auth.currentUser.name }}</div>
+                    
+                </div>
+            </router-link>
         </el-header>
 
         <div style="flex-grow: 1; display: flex;">
@@ -31,7 +35,14 @@
 </template>
 
 <script setup lang="ts">
-import { ElContainer, ElHeader, ElFooter, ElBreadcrumb, ElBreadcrumbItem, ElAvatar } from 'element-plus';
+import { ElContainer, ElHeader, ElFooter, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus';
+import { RouterLink } from 'vue-router';
+
+import CAvatar from '../common/CAvatar.vue';
+
+import { useAuth } from '@/stores/auth';
+
+const auth = useAuth();
 
 const prop = withDefaults(defineProps<{
     admin?: boolean,

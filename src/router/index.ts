@@ -1,13 +1,11 @@
 import DashBoard from '@/pages/admin/DashBoard.vue'
-// import UserCreate from '@/components/user/UserCreate.vue'
-// import UserHome from '@/pages/auth/UserHome.vue'
-// import UserLogin from '@/components/user/UserLogin.vue'
+import UserHome from '@/pages/auth/UserHome.vue'
 import ForumHome from '@/pages/forum/ForumHome.vue'
-// import TestPage from '@/pages/forum/TestPage.vue'
+import TestPage from '@/pages/forum/TestPage.vue'
 import PostDetail from '@/pages/post/PostDetail.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-// import PageNotFound from '@/pages/PageNotFound.vue'
 import PostList from '@/pages/post/PostList.vue'
+
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,19 +16,29 @@ const router = createRouter({
       component: ForumHome
     },
     {
-      path: '/detail',
-      name: 'detail',
-      component: PostDetail
-    },
-    {
       path: '/admin',
       name: 'admin',
       component: DashBoard
     },
     {
+      path: '/post/detail',
+      name: 'post.detail',
+      component: PostDetail
+    },
+    {
+      path: '/post/list',
+      name: 'post.list',
+      component: PostList
+    },
+    {
+      path: '/user/home',
+      name: 'user.home',
+      component: UserHome
+    },
+    {
       path: '/test',
       name: 'test',
-      component: PostList
+      component: TestPage
     },
     {
       path: '/:pathMatch(.*)*',
