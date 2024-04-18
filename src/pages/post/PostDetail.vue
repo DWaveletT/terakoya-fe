@@ -1,40 +1,43 @@
 <template>
-    <common-layout>
+    <common-layout
+        :title="currentData.post.title"
+        :bread="['首页', '讨论详情']"
+    >
         <el-container class="main-container">
             <el-main class="main">
-                <c-bubble :user="testUser" border-color="var(--el-color-warning)">
+                <c-bubble :user="currentData.post.poster" border-color="var(--el-color-warning)">
                     <template #header>
-                        <c-username :user=testUser /> / 1970-01-01
+                        <c-username :user="currentData.post.poster" /> / 1970-01-01
                         <div class="reply-operator">
                             楼主
                         </div>
                     </template>
                     <template #message>
-                        <text-render :content="text1" />
+                        <text-render :content="currentData.post.content" />
                     </template>
                 </c-bubble>
 
-                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="1000" background
+                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
                     hide-on-single-page small class="pagination" />
 
-                <c-bubble :user="testUser" v-for="i in tmp" :key="i">
+                <c-bubble v-for="i in currentData.replys" :key="i.id" :user="i.replyer">
                     <template #header>
-                        <c-username :user=testUser />
+                        <c-username :user="i.replyer" />
                         <div class="reply-operator">
                             <span>
-                                <font-awesome-icon :icon="faThumbsUp" /> 114
+                                <font-awesome-icon :icon="faThumbsUp" /> {{ i.like }}
                             </span>
                             <span>
-                                <font-awesome-icon :icon="faThumbsDown" /> 514
+                                <font-awesome-icon :icon="faThumbsDown" /> {{ i.dislike }}
                             </span>
                         </div>
                     </template>
                     <template #message>
-                        <text-render :content="text2" />
+                        <text-render :content="i.content" />
                     </template>
                 </c-bubble>
 
-                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="1000" background
+                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
                     hide-on-single-page small class="pagination" />
 
                 <div ref="reply" />
@@ -42,7 +45,7 @@
                 <el-card shadow="hover">
                     <h3 style="margin: 0;">回复帖子</h3>
 
-                    <template v-if="isLoggedIn">
+                    <template v-if="auth.isLoggedIn">
                         <text-editor v-model="replyContent" />
                     </template>
                     <template v-else>
@@ -63,30 +66,30 @@
                 <el-affix :offset="30">
                     <c-info-card>
 
-                        <h3 style="margin: 0.5em; text-align: center;">我是帖子标题</h3>
+                        <h3 style="margin: 0.5em; text-align: center;">{{ currentData.post.title }}</h3>
 
                         <el-divider />
 
                         <div class="info">
                             <div class="info-item">
                                 <div><font-awesome-icon :icon="faUser" /> 楼主</div>
-                                <div>泡椛儿碱</div>
+                                <div>{{ currentData.post.poster.name }}</div>
                             </div>
                             <div class="info-item">
-                                <div><font-awesome-icon :icon="faClock" /> 发布日期</div>
-                                <div>04-17-14:00</div>
+                                <div><font-awesome-icon :icon="faClock" /> 发布时间</div>
+                                <div>{{ currentData.post.time }}</div>
                             </div>
                             <div class="info-item">
-                                <div><font-awesome-icon :icon="faComment" /> 回帖数量</div>
-                                <div>114514</div>
+                                <div><font-awesome-icon :icon="faComment" /> 回复个数</div>
+                                <div>{{ currentData.total }}</div>
                             </div>
                             <div class="info-item">
-                                <div><font-awesome-icon :icon="faThumbsUp" /> 点赞数量</div>
-                                <div>514</div>
+                                <div><font-awesome-icon :icon="faThumbsUp" /> 点赞量</div>
+                                <div>{{ currentData.post.like }}</div>
                             </div>
                             <div class="info-item">
-                                <div><font-awesome-icon :icon="faThumbsDown" /> 点踩数量</div>
-                                <div>114</div>
+                                <div><font-awesome-icon :icon="faThumbsDown" /> 点踩量</div>
+                                <div>{{ currentData.post.dislike }}</div>
                             </div>
                         </div>
                     </c-info-card>
@@ -136,43 +139,35 @@ import { ElContainer, ElMain } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider, ElBacktop } from 'element-plus';
 
 import { ref } from 'vue';
+import { useAuth } from '@/stores/auth';
 
-const testUser = ref<User>({
-    id: 1,
-    name: '椛儿',
-    role: 1
-});
+import { useTestdata } from '@/stores/test';
 
-const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+// =====  Auth Area =====
+
+const auth = useAuth();
+
+const showLogin = ref(false);
+
+// ===== Reply Area =====
 
 const reply = ref<HTMLElement>(null!);
 const replyContent = ref('');
 
-const showLogin = ref(false);
-
-const text1 = `
-# 大家好啊
-
-我是说的道理，今天来点大家想看的东西。
-
-## 列表语法
-
-- 我是一个无序列表。
-- 这个是第二个条目。
-- 这个是第三个条目。
-
-## 其他语法
-
-这个词会被**加粗**。
-`;
-
-const text2 = `这个是占位置用的文本。`;
-
-const isLoggedIn = ref(false);
-
 function scrollToReply() {
     reply.value.scrollIntoView({ behavior: 'smooth' });
 }
+
+// ===== Test Area ======
+
+const testData = useTestdata();
+
+const currentUser = auth.currentUser;
+const currentData = {
+    post: testData.testPost[0],
+    replys: testData.testReply.filter((i) => { return i.post === testData.testPost[0].id }),
+    total: 100
+};
 
 </script>
 

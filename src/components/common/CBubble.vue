@@ -3,7 +3,7 @@
         <div class="bubble" :style="{'--border-color': borderColor}">
             <div class="header">
                 <div class="avatar">
-                    <el-avatar :src="props.user.avatar" :size="48" />
+                    <el-avatar :src="'/usericon/' + `${props.user.id}.png`" :size="48" />
                 </div>
                 <slot name="header" />
             </div>
