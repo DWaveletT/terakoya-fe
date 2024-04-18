@@ -47,6 +47,11 @@ function swtichRegister() {
     show.value = false;
     setTimeout(() => {showReg.value = true}, 300);
 }
+
+// async function doLogin() {
+
+// }
+
 </script>
 
 <style scoped lang="scss">

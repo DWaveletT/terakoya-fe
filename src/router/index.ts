@@ -6,6 +6,7 @@ import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
 import PostDetail from '@/pages/post/PostDetail.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import PageNotFound from '@/pages/PageNotFound.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,15 +30,12 @@ const router = createRouter({
       path: '/test',
       name: 'test',
       component: UserHome
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'error',
+      component: import('../pages/PageNotFound.vue')
     }
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ]
 })
 

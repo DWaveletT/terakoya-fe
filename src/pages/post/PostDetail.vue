@@ -7,7 +7,7 @@
             <el-main class="main">
                 <c-bubble :user="currentData.post.poster" border-color="var(--el-color-warning)">
                     <template #header>
-                        <c-username :user="currentData.post.poster" /> / 1970-01-01
+                        <c-username :user="currentData.post.poster" /> / {{ currentData.post.time }}
                         <div class="reply-operator">
                             楼主
                         </div>
@@ -22,7 +22,7 @@
 
                 <c-bubble v-for="i in currentData.replys" :key="i.id" :user="i.replyer">
                     <template #header>
-                        <c-username :user="i.replyer" />
+                        <c-username :user="i.replyer" /> / {{ i.time }}
                         <div class="reply-operator">
                             <span>
                                 <font-awesome-icon :icon="faThumbsUp" /> {{ i.like }}
@@ -162,7 +162,6 @@ function scrollToReply() {
 
 const testData = useTestdata();
 
-const currentUser = auth.currentUser;
 const currentData = {
     post: testData.testPost[0],
     replys: testData.testReply.filter((i) => { return i.post === testData.testPost[0].id }),
