@@ -7,9 +7,9 @@
                 </el-col>
                 <el-col :span="18">
                     <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
-                        hide-on-single-page small class="pagination" />
+                        hide-on-single-page small class="pagination" v-model:current-page="page" />
                     <div class="cards">
-                        <el-card v-for="post in currentData.posts" :key="post.id" class="post-item">
+                        <el-card v-for="post in currentData.posts" :key="post.id" class="post-item" @click="jumpPostDetail(post.id)">
                             <el-row style="height: 60px;">
                                 <el-col :span="3" class="card-item vertical-middle">
                                     <c-avatar :user="post.poster" :size="60" />
@@ -31,13 +31,13 @@
                         </el-card>
                     </div>
                     <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
-                    hide-on-single-page small class="pagination" />
+                    hide-on-single-page small class="pagination" v-model:current-page="page" />
                 </el-col>
             </el-row>
         </div>
 
         <div class="new-post">
-            <el-button circle size="large" style="border: 2px solid var(--el-color-primary);" @click="doPostNew">
+            <el-button circle size="large" style="border: 2px solid var(--el-color-primary);" @click="jumpPostNew">
                 <font-awesome-icon :icon="faPaperPlane" size="lg" />
             </el-button>
         </div>
@@ -58,28 +58,53 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import { useTestdata } from '@/stores/test';
 import { useRouter } from 'vue-router';
+
+import { type Post } from '@/interface';
 
 const boardId = ref(0);
 
 const testdata = useTestdata();
 const router = useRouter();
 
-const currentData = {
-    total: 100,
-    posts: [...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost]
-};
+const page = ref(1);
 
-function doPostNew() {
+const currentData = ref({
+    total: 0,
+    posts: [] as Post[]
+});
+
+function jumpPostDetail(pid: number){
+    router.push({ name: 'post.detail', params: { pid }});
+}
+
+function jumpPostNew() {
     if(boardId.value > 0){
         router.push({ name: 'post.new', query: { 'boardId': boardId.value }});
     } else {
         router.push({ name: 'post.new' });
     }
 }
+
+function queryPostList(){
+    console.log('query', page.value);
+
+    currentData.value = {
+        total: 100,
+        posts: [...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost]
+    };
+}
+
+onMounted(() => {
+    queryPostList();
+});
+
+watch([page, boardId], () => {
+    queryPostList();
+});
 
 </script>
 
@@ -98,6 +123,8 @@ function doPostNew() {
 }
 
 .post-item {
+    cursor: pointer;
+
     &:not(:last-child) {
         margin-bottom: 0.5em;
     }

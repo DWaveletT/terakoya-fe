@@ -4,15 +4,12 @@
             <h3 class="title">版块选择</h3>
             <div class="boards">
                 <el-scrollbar height="200px">
-                    <div v-if="props.all" class="board-item all" :class="{ 'selected-all': boardId === 0 }" @click="boardId = 0">
+                    <div v-if="props.all" class="board-item all" :class="{ 'selected-all': boardId === 0 }"
+                        @click="boardId = 0">
                         所有版块
                     </div>
-                    <div
-                        v-for="board in info.boards"
-                        :key="board.id" class="board-item"
-                        :class="{ selected: boardId === board.id }"
-                        @click="boardId = board.id"
-                    >
+                    <div v-for="board in info.boards" :key="board.id" class="board-item"
+                        :class="{ selected: boardId === board.id }" @click="boardId = board.id">
                         {{ board.name }}
                     </div>
                 </el-scrollbar>
@@ -29,7 +26,7 @@
 import { ElAffix, ElCard, ElScrollbar } from 'element-plus';
 
 import { computed } from 'vue';
-import { useInfo } from '@/stores/info';
+import { useInfo } from '@/stores/config';
 
 const props = withDefaults(defineProps<{
     all?: boolean
@@ -47,7 +44,6 @@ const boardInfo = computed(() => {
 </script>
 
 <style scoped lang="scss">
-
 .board-item {
     padding: 0.5em 1em;
     margin: 0 0;
@@ -67,12 +63,13 @@ const boardInfo = computed(() => {
         color: white;
         background-color: var(--el-color-primary);
     }
+
     &.selected-all {
         color: white;
         background-color: var(--el-color-success);
     }
 
-    &:not(:last-child){
+    &:not(:last-child) {
         border-bottom: 2px solid var(--el-color-primary);
     }
 }

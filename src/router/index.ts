@@ -50,7 +50,7 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      name: 'error',
+      name: 'error404',
       component: PageNotFound
     }
   ]

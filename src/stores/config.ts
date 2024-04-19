@@ -8,5 +8,7 @@ export const useInfo = defineStore('info', () => {
 
     const boards = testdata.testBoard;
 
+    console.log('get board info');
+
     return { boards }
 });

@@ -38,20 +38,20 @@ import { ElRow, ElCol, ElCard, ElButton, ElForm, ElFormItem, ElInput, ElText } f
 import { ref } from 'vue';
 import type { Post } from '@/interface';
 
-import { useInfo } from '@/stores/info';
+import { useInfo } from '@/stores/config';
 import { useRoute } from 'vue-router';
 import { isArray } from 'element-plus/es/utils/types.mjs';
 
 const info = useInfo();
 const route = useRoute();
 
-function getBoardId(){
+function getBoardId() {
     let result = route.query['boardId'];
 
-    if(isArray(result)){
+    if (isArray(result)) {
         return parseInt(result[0] || '1');
     } else {
-        return parseInt(result    || '1');
+        return parseInt(result || '1');
     }
 }
 
@@ -71,7 +71,6 @@ const post = ref<Post>({
 </script>
 
 <style scoped lang="scss">
-
 .main-container {
     flex-grow: 1;
     max-width: 1080px;

@@ -24,10 +24,10 @@
                     <template #header>
                         <c-username :user="i.replyer" /> / {{ i.time }}
                         <div class="reply-operator">
-                            <span>
+                            <span @click="doReplyLike(i.id)">
                                 <font-awesome-icon :icon="faThumbsUp" /> {{ i.like }}
                             </span>
-                            <span>
+                            <span @click="doReplyDislike(i.id)">
                                 <font-awesome-icon :icon="faThumbsDown" /> {{ i.dislike }}
                             </span>
                         </div>
@@ -96,12 +96,12 @@
 
                     <div class="post-operator">
                         <div>
-                            <el-button type="success" plain circle><font-awesome-icon :icon="faThumbsUp" /></el-button>
-                            <el-button type="danger" plain circle><font-awesome-icon :icon="faThumbsDown" /></el-button>
+                            <el-button type="success" plain circle @click="doPostLike"><font-awesome-icon :icon="faThumbsUp" /></el-button>
+                            <el-button type="danger" plain circle @click="doPostDislike"><font-awesome-icon :icon="faThumbsDown" /></el-button>
                         </div>
                         <div>
                             <el-button type="primary" plain @click="scrollToReply">回复</el-button>
-                            <el-button type="danger" plain>删除</el-button>
+                            <el-button type="danger" plain @click="doPostDelete">删除</el-button>
                         </div>
                     </div>
                 </el-affix>
@@ -134,15 +134,22 @@ import TextEditor from '@/components/text/TextEditor.vue';
 import { ElContainer, ElMain } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
-import { inject, ref } from 'vue';
+import { inject, onMounted, reactive, ref } from 'vue';
 
 import { useAuth } from '@/stores/auth';
+import { useRoute, useRouter } from 'vue-router';
 
 import { useTestdata } from '@/stores/test';
+import { useUtil } from '@/stores/util';
+
+import type { Reply } from '@/interface';
 
 // =====  Auth Area =====
 
 const auth = useAuth();
+const router = useRouter();
+
+const util = useUtil();
 
 const showLogin = ref(false);
 
@@ -160,11 +167,65 @@ function scrollToReply() {
 
 const testData = useTestdata();
 
-const currentData = {
-    post: testData.testPost[0],
-    replys: testData.testReply.filter((i) => { return i.post === testData.testPost[0].id }),
+const currentData = ref({
+    post: util.fakePost,
+    replys: [] as Reply[],
     total: 100
-};
+});
+
+function queryPostDetail(){
+
+    console.log('query post detail');
+
+    let pid = util.parseParamInt('pid');
+
+    if(pid === undefined){
+        router.push('/error');
+        return;
+    }
+
+    let testpost = testData.testPost.find((post) => post.id === pid);
+
+    console.log(testpost);
+
+    if(testpost === undefined){
+        router.push('/error');
+        return;
+    }
+
+    currentData.value = {
+        post: testpost,
+        replys: testData.testReply.filter((i) => i.post === testpost.id),
+        total: 100
+    }
+}
+
+function doPostDelete() {
+    console.log('do post delete');
+    
+}
+
+function doPostLike() {
+    console.log('do post like');
+}
+
+function doPostDislike() {
+    console.log('do post dislike');
+
+}
+
+function doReplyLike(rid: number) {
+    console.log('do reply like', rid);
+
+}
+
+function doReplyDislike(rid: number) {
+    console.log('do reply dislike', rid);
+}
+
+onMounted(() => {
+    queryPostDetail();
+});
 
 </script>
 
@@ -222,6 +283,8 @@ const currentData = {
 
 .reply-operator {
     float: right;
+
+    cursor: pointer;
 
     > :not(:last-child) {
         margin-right: 1em;
