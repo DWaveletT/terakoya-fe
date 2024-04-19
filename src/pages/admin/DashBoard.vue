@@ -5,6 +5,7 @@
                 <el-affix target=".aside">
                     <el-menu
                         default-active="2"
+                        @select="(index) => { manageIndex = index }"
                     >
                         <div style="text-align: center; margin: 1em 1em">
                             <font-awesome-icon :icon="faGears" size="2x" />
@@ -34,9 +35,13 @@
                     </el-menu>
                 </el-affix>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="18">
                 <el-card class="pane" shadow="never">
-                    <p v-for="i in Array(20)" :key="i">something...</p>
+                    <component v-if="manageIndex === '0'" :is="ManageHome" />
+                    <component v-else-if="manageIndex === '1'" :is="ManageUser" />
+                    <component v-else-if="manageIndex === '2'" :is="ManagePost" />
+                    <component v-else-if="manageIndex === '3'" :is="ManageReply" />
+                    <component v-else-if="manageIndex === '4'" :is="ManageBoard" />
                 </el-card>
             </el-col>
         </el-row>
@@ -47,12 +52,20 @@
 
 import CommonLayout from '@/components/layout/CommonLayout.vue';
 
+import ManageHome from './ManageHome.vue';
+import ManageUser from './ManageUser.vue';
+import ManagePost from './ManagePost.vue';
+import ManageReply from './ManageReply.vue';
+import ManageBoard from './ManageBoard.vue';
+
 import { ElMenu, ElMenuItem, ElRow, ElCol, ElCard, ElAffix, ElDivider } from 'element-plus';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUser, faComment, faPaperPlane, faFolder, faList, faGears } from '@fortawesome/free-solid-svg-icons';
 
-// import { ref } from 'vue';
+import { ref } from 'vue';
+
+const manageIndex = ref("0");
 
 </script>
 

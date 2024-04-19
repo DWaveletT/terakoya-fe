@@ -14,7 +14,7 @@
                 <el-link @click="swtichRegister">注册账号</el-link>
                 <!-- <el-link>忘记密码</el-link> -->
             </el-space>
-            <el-button type="primary">提交</el-button>
+            <el-button type="primary" @click="doLogin">提交</el-button>
         </div>
         
     </el-dialog>
@@ -24,13 +24,15 @@
 
 <script setup lang="ts">
 import { ElDialog } from 'element-plus';
-import { ElForm, ElInput, ElFormItem, ElButton, ElLink } from 'element-plus';
+import { ElForm, ElInput, ElFormItem, ElButton, ElLink, ElNotification } from 'element-plus';
 
 import { ElSpace } from 'element-plus';
 
 import UserCreate from './UserCreate.vue';
 
 import { ref } from 'vue';
+
+import axios, { AxiosError } from 'axios';
 
 const show = defineModel<boolean>({ required: true });
 const showReg = ref(false);
@@ -48,9 +50,44 @@ function swtichRegister() {
     setTimeout(() => {showReg.value = true}, 300);
 }
 
-// async function doLogin() {
+interface LoginResponse {
+    token: string
+}
 
-// }
+interface ErrorResponse {
+    message: string
+}
+
+async function doLogin() {
+    axios<LoginResponse>({
+        url: 'http://localhost:9999/api/user/login',
+        method: 'POST',
+        data: {
+            username: username.value,
+            password: password.value
+        },
+        withCredentials: true
+    }).catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            console.log('未知错误');
+        } else {
+            if(response.status === 500){
+                ElNotification({
+                    title: '内部错误',
+                    message: '',
+                    type: 'success',
+                })
+            } else 
+            if(response.status === 400){
+                console.log('Bad Request');
+            } else 
+            if(response.status === 401){
+                console.log((response.data as ErrorResponse).message);
+            }
+        }
+    })
+}
 
 </script>
 

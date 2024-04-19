@@ -18,8 +18,8 @@ import { ElCard } from 'element-plus';
 .bar-top {
     height: 10px;
 
-    margin-left:  -21.5px;
-    margin-right: -21.5px;
+    margin-left:  -25px;
+    margin-right: -25px;
 
     box-sizing: border-box;
 
@@ -32,8 +32,8 @@ import { ElCard } from 'element-plus';
 .bar-bottom {
     height: 10px;
 
-    margin-left:  -21.5px;
-    margin-right: -21.5px;
+    margin-left:  -25px;
+    margin-right: -25px;
 
     box-sizing: border-box;
 

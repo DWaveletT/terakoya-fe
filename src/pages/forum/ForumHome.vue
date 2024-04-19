@@ -33,7 +33,7 @@ import CNavTop from '@/components/layout/CNavTop.vue';
 import BlockHotspot from '@/components/forum/BlockHotspot.vue';
 import BlockSection from '@/components/forum/BlockSection.vue';
 
-import { ElContainer, ElHeader, ElMain, ElBacktop, ElFooter } from 'element-plus';
+import { ElContainer, ElHeader, ElMain, ElBacktop, ElFooter, ElText } from 'element-plus';
 
 // import { ref } from 'vue';
 

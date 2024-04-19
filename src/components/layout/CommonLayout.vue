@@ -11,38 +11,43 @@
                 </div>
             </div>
             
-            <router-link to="/user/home">
-                <div class="user">
-                    <c-avatar :user="auth.currentUser" />
-
-                        <div style="margin-left: 0.5em;">{{ auth.currentUser.name }}</div>
-                    
-                </div>
-            </router-link>
+            <div class="user">
+                <c-avatar :user="auth.currentUser" style="margin-right: 1em" />
+                    <router-link to="/user/home" v-if="auth.isLoggedIn" style="text-decoration: none;">
+                        <div class="username">{{ auth.currentUser.name }}</div>
+                    </router-link>
+                    <el-link @click="showLogin = true" :underline="false" v-else>
+                        <div class="username">{{ auth.currentUser.name }}</div>
+                    </el-link>
+            </div>
         </el-header>
 
         <div style="flex-grow: 1; display: flex;">
             <slot />
         </div>
 
-        
-
         <el-footer height="100px" class="footer">
             <p>由 HIT Touhou Team 基于 Element Plus 编写。保留所有权利。</p>
             <p>2024 年 4 月 15 日。</p>
         </el-footer>
+
+        <user-login v-model="showLogin" />
     </el-container>
 </template>
 
 <script setup lang="ts">
-import { ElContainer, ElHeader, ElFooter, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus';
+import { ElContainer, ElHeader, ElFooter, ElBreadcrumb, ElBreadcrumbItem, ElLink } from 'element-plus';
 import { RouterLink } from 'vue-router';
 
+import UserLogin from '../user/UserLogin.vue';
 import CAvatar from '../common/CAvatar.vue';
 
 import { useAuth } from '@/stores/auth';
 
+import { ref } from 'vue';
+
 const auth = useAuth();
+const showLogin = ref(false);
 
 const prop = withDefaults(defineProps<{
     admin?: boolean,
@@ -67,7 +72,7 @@ const prop = withDefaults(defineProps<{
     align-items: center;
 
     top: 0;
-    right: 60px;
+    right: 40px;
 
     width: 150px;
 
@@ -82,6 +87,12 @@ const prop = withDefaults(defineProps<{
 
     border-bottom-left-radius: 0.5em;
     border-bottom-right-radius: 0.5em;
+
+    .username {
+        color: var(--theme-color-1);
+        font-weight: bold;
+        font-size: large;
+    }
 }
 
 
@@ -100,6 +111,7 @@ const prop = withDefaults(defineProps<{
 }
 
 .header {
+    position: relative;
     display: block;
 
     border-bottom: 4px solid var(--theme-color-1);

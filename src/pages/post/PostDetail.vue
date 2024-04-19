@@ -110,8 +110,6 @@
     </common-layout>
 
     <user-login v-model="showLogin" />
-
-    <el-backtop :right="50" :bottom="50" />
     <!-- <c-nav-side /> -->
 </template>
 
@@ -134,9 +132,11 @@ import TextRender from '@/components/text/TextRender.vue';
 import TextEditor from '@/components/text/TextEditor.vue';
 
 import { ElContainer, ElMain } from 'element-plus';
-import { ElCard, ElButton, ElPagination, ElAffix, ElDivider, ElBacktop } from 'element-plus';
+import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
+import type { Ref } from 'vue';
+
 import { useAuth } from '@/stores/auth';
 
 import { useTestdata } from '@/stores/test';
@@ -152,8 +152,9 @@ const showLogin = ref(false);
 const reply = ref<HTMLElement>(null!);
 const replyContent = ref('');
 
+const scrollbarWrap = inject<HTMLDivElement | null>('scrollbar-wrap');
 function scrollToReply() {
-    reply.value.scrollIntoView({ behavior: 'smooth' });
+    scrollbarWrap?.scrollTo({ top: reply.value.offsetTop - 10, behavior: 'smooth' });
 }
 
 // ===== Test Area ======

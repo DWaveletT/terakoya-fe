@@ -185,7 +185,7 @@ const currentData = {
 .new-post {
     position: fixed;
 
-    right: 50px;
+    right: 40px;
     bottom: 100px;
 }
 </style>
