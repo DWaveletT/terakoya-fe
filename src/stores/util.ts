@@ -76,8 +76,43 @@ export const useUtil = defineStore('util', () => {
         }
     }
 
+    function parseQueryString(key: string): string | undefined {
+        const result = route.query[key];
+    
+        if(result === null)
+            return undefined;
+    
+        if(isArray(result)){
+            if(!result[0]){
+                return undefined;
+            } else {
+                return result[0];
+            }
+        } else {
+            return result;
+        }
+    }
+
+    function parseQueryInt(key: string): number | undefined {
+        const result = route.query[key];
+    
+        if(result === null)
+            return undefined;
+    
+        if(isArray(result)){
+            if(!result[0]){
+                return undefined;
+            } else {
+                return parseInt(result[0]);
+            }
+        } else {
+            return parseInt(result);
+        }
+    }
+
     return {
         fakeUser, fakePost, fakeBoard, fakeReply,
-        parseParamInt, parseParamString
+        parseParamInt, parseParamString,
+        parseQueryInt, parseQueryString,
     }
 });

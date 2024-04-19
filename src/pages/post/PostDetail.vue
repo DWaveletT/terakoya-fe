@@ -17,8 +17,8 @@
                     </template>
                 </c-bubble>
 
-                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
-                    hide-on-single-page small class="pagination" />
+                <el-pagination v-if="currentData.replys.length > 5" :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
+                    hide-on-single-page small class="pagination" v-model:current-page="page" />
 
                 <c-bubble v-for="i in currentData.replys" :key="i.id" :user="i.replyer">
                     <template #header>
@@ -37,8 +37,7 @@
                     </template>
                 </c-bubble>
 
-                <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
-                    hide-on-single-page small class="pagination" />
+                <el-pagination hideOnSinglePage :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background small class="pagination" v-model:current-page="page" />
 
                 <div ref="reply" />
 
@@ -172,6 +171,8 @@ const currentData = ref({
     replys: [] as Reply[],
     total: 100
 });
+
+const page = ref(util.parseQueryInt('page') || 1);
 
 function queryPostDetail(){
 

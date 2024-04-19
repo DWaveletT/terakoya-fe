@@ -7,11 +7,6 @@
                         default-active="2"
                         @select="(index) => { manageIndex = index }"
                     >
-                        <div style="text-align: center; margin: 0.5em 0.5em">
-                            <font-awesome-icon :icon="faGears" size="2x" />
-
-                            <el-divider />
-                        </div>
                         <el-menu-item index="0">
                             <font-awesome-icon :icon="faList" style="margin: 0 1em;" />
                             <span>首页</span>
