@@ -22,7 +22,7 @@
                 }"
                 resize="none"
                 type="textarea"
-                placeholder="请在此处回复，支持使用 Markdown。"
+                :placeholder="prop.placeholder"
                 :disabled="prop.disabled"
             />
         </template>
@@ -39,9 +39,11 @@ import { ref } from 'vue';
 const text = defineModel<string>({ required: true });
 
 const prop = withDefaults(defineProps<{
-    disabled: boolean
+    disabled?: boolean,
+    placeholder?: string
 }>(), {
-    disabled: false
+    disabled: false,
+    placeholder: ''
 });
 
 const preview = ref(false);

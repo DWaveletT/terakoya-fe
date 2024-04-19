@@ -1,29 +1,9 @@
 <template>
-    <common-layout :bread="['level1', 'level2', 'level3']" title="帖子列表">
+    <common-layout :bread="['寺子屋', '帖子列表']" title="帖子列表">
         <div class="main-container">
             <el-row :gutter="20">
                 <el-col :span="6">
-                    <el-affix target=".main-container" :offset="20">
-                        <el-card>
-                            <h3 class="title">版块选择</h3>
-                            <div class="boards">
-                                <el-scrollbar height="250px">
-                                    <div v-for="board in boards" :key="board.id" class="board-item" :class="{ selected: currentBoardId === board.id }" @click="selectBoard(board)">
-                                        {{ board.name }}
-                                    </div>
-                                </el-scrollbar>
-                            </div>
-                        </el-card>
-                        <el-card style="margin-top: 0.5em">
-                            <h3 class="title">版块说明</h3>
-                            <template v-if="currentBoardId === 0">
-                                <p>请在上方版块列表里选择一个版块。</p>
-                            </template>
-                            <template v-else>
-                                <p>{{ currentBoardInfo }}</p>
-                            </template>
-                        </el-card>
-                    </el-affix>
+                    <block-sidebar v-model="boardId" />
                 </el-col>
                 <el-col :span="18">
                     <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
@@ -36,20 +16,15 @@
                                 </el-col>
                                 <el-col :span="7" class="card-item">
                                     <h3 class="title" style="margin-top: 0">{{ post.title }}</h3>
-                                    <c-username :user="post.poster" />
-                                    <span style="color: var(--el-color-info)"> 发表于 {{ post.time }}</span>
+                                    <span style="font-size: small"><c-username :user="post.poster" /> <span style="color: var(--el-color-info); ">发表于 {{ post.time }}</span></span>
                                 </el-col>
                                 <el-col :span="12" class="card-item describe">
                                     {{ post.content }}
                                 </el-col>
                                 <el-col :span="2" class="card-item vertical-middle">
                                     <div>
-                                        <div class="info-item">
-                                            <font-awesome-icon :icon="faThumbsUp" /> {{ post.like > 999 ? '999+' : post.like }}
-                                        </div>
-                                        <div class="info-item">
-                                            <font-awesome-icon :icon="faThumbsDown" /> {{ post.dislike > 999 ? '999+' : post.dislike }}
-                                        </div>
+                                        <el-tag type="success" class="info-item"><font-awesome-icon :icon="faThumbsUp" /> {{ post.like > 999 ? '999+' : post.like }}</el-tag>
+                                        <el-tag type="danger" class="info-item"><font-awesome-icon :icon="faThumbsDown" /> {{ post.dislike > 999 ? '999+' : post.dislike }}</el-tag>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -61,10 +36,8 @@
             </el-row>
         </div>
 
-        <el-backtop :right="50" :bottom="50" />
-
         <div class="new-post">
-            <el-button circle size="large" style="border: 2px solid var(--el-color-primary);">
+            <el-button circle size="large" style="border: 2px solid var(--el-color-primary);" @click="doPostNew">
                 <font-awesome-icon :icon="faPaperPlane" size="lg" />
             </el-button>
         </div>
@@ -72,14 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { type Board } from '@/interface';
-
 import CommonLayout from '@/components/layout/CommonLayout.vue';
 
 import CAvatar from '@/components/common/CAvatar.vue';
 import CUsername from '@/components/user/CUsername.vue';
 
-import { ElRow, ElCol, ElCard, ElScrollbar, ElPagination, ElAffix, ElBacktop, ElButton } from 'element-plus';
+import BlockSidebar from '@/components/post/BlockSidebar.vue';
+
+import { ElRow, ElCol, ElCard, ElPagination, ElButton, ElTag } from 'element-plus';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
@@ -88,22 +61,21 @@ import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 import { ref } from 'vue';
 
 import { useTestdata } from '@/stores/test';
+import { useRouter } from 'vue-router';
+
+const boardId = ref(0);
 
 const testdata = useTestdata();
-const boards = [...testdata.testBoard, ...testdata.testBoard, ...testdata.testBoard];
-
-const currentBoardId   = ref(0);
-const currentBoardInfo = ref('');
-
-function selectBoard(board: Board) {
-    currentBoardId.value   = board.id;
-    currentBoardInfo.value = board.description;
-}
+const router = useRouter();
 
 const currentData = {
     total: 100,
     posts: [...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost]
 };
+
+function doPostNew() {
+    router.push({ name: 'post.new', query: { 'boardId': boardId.value }});
+}
 
 </script>
 
@@ -121,25 +93,6 @@ const currentData = {
     margin: 1em auto;
 }
 
-.board-item {
-    padding: 0.5em 1em;
-    margin: 0 0;
-
-    color: var(--el-color-primary-dark-2);
-    background-color: var(--el-color-primary-light-8);
-
-    transition: background-color 0.2s ease-in-out;
-
-    &.selected {
-        color: white;
-        background-color: var(--el-color-primary);
-    }
-
-    &:not(:last-child){
-        border-bottom: 2px solid var(--el-color-primary);
-    }
-}
-
 .post-item {
     &:not(:last-child) {
         margin-bottom: 0.5em;
@@ -152,28 +105,17 @@ const currentData = {
 }
 
 .info-item {
+    display: flex;
+
+    width: 5em;
+
+    justify-content: left;
+
     &:not(:last-child) {
         margin-bottom: 0.5em;
     }
 }
 
-.boards {
-    max-height: 250px;
-
-    border-top: 3px solid var(--el-color-primary);
-    border-bottom: 3px solid var(--el-color-primary);
-
-    background-color: var(--el-color-primary-light-7);
-
-    cursor: pointer;
-}
-
-.describe {
-    max-height: 60px;
-    overflow: hidden;
-    padding: 0 0.5em;
-    white-space: wrap;
-}
 .cards {
     margin: 1em 0;
 }
@@ -187,5 +129,13 @@ const currentData = {
 
     right: 40px;
     bottom: 100px;
+}
+
+.describe {
+    max-height: 60px;
+    padding: 0 0.5em;
+    white-space: wrap;
+    
+    text-overflow: ellipsis;
 }
 </style>

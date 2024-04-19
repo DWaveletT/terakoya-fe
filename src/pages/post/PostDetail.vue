@@ -46,7 +46,7 @@
                     <h3 style="margin: 0;">回复帖子</h3>
 
                     <template v-if="auth.isLoggedIn">
-                        <text-editor v-model="replyContent" />
+                        <text-editor v-model="replyContent" placeholder="请在此处回复，支持使用 Markdown。" />
                     </template>
                     <template v-else>
                         <div class="login-area" @click="showLogin = true">
@@ -135,7 +135,6 @@ import { ElContainer, ElMain } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
 import { inject, ref } from 'vue';
-import type { Ref } from 'vue';
 
 import { useAuth } from '@/stores/auth';
 

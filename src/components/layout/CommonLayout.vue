@@ -13,7 +13,7 @@
             
             <div class="user">
                 <c-avatar :user="auth.currentUser" style="margin-right: 1em" />
-                    <router-link to="/user/home" v-if="auth.isLoggedIn" style="text-decoration: none;">
+                    <router-link to="/user" v-if="auth.isLoggedIn" style="text-decoration: none;">
                         <div class="username">{{ auth.currentUser.name }}</div>
                     </router-link>
                     <el-link @click="showLogin = true" :underline="false" v-else>

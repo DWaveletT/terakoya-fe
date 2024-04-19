@@ -4,6 +4,9 @@ import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
 import PostDetail from '@/pages/post/PostDetail.vue'
 import PostList from '@/pages/post/PostList.vue'
+import PostNew from '@/pages/post/PostNew.vue'
+
+import PageNotFound from '../pages/PageNotFound.vue'
 
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -21,17 +24,22 @@ const router = createRouter({
       component: DashBoard
     },
     {
-      path: '/post/detail',
-      name: 'post.detail',
-      component: PostDetail
-    },
-    {
-      path: '/post/list',
+      path: '/post',
       name: 'post.list',
       component: PostList
     },
     {
-      path: '/user/home',
+      path: '/post/new',
+      name: 'post.new',
+      component: PostNew
+    },
+    {
+      path: '/post/:pid',
+      name: 'post.detail',
+      component: PostDetail
+    },
+    {
+      path: '/user',
       name: 'user.home',
       component: UserHome
     },
@@ -43,7 +51,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       name: 'error',
-      component: import('../pages/PageNotFound.vue')
+      component: PageNotFound
     }
   ]
 })
