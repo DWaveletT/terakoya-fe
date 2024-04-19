@@ -3,7 +3,7 @@
         <div class="main-container">
             <el-row :gutter="20">
                 <el-col :span="6">
-                    <block-sidebar v-model="boardId" />
+                    <block-sidebar :all="true" v-model="boardId" />
                 </el-col>
                 <el-col :span="18">
                     <el-pagination :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
@@ -74,7 +74,11 @@ const currentData = {
 };
 
 function doPostNew() {
-    router.push({ name: 'post.new', query: { 'boardId': boardId.value }});
+    if(boardId.value > 0){
+        router.push({ name: 'post.new', query: { 'boardId': boardId.value }});
+    } else {
+        router.push({ name: 'post.new' });
+    }
 }
 
 </script>

@@ -9,7 +9,7 @@
                     <el-card>
                         <el-form :model="post" label-width="auto">
                             <el-form-item label="帖子标题">
-                                <el-input type="text" v-model="post.title" placeholder="长度应介于 1 至 15 之间" />
+                                <el-input type="text" v-model="post.title" placeholder="长度应介于 1 至 10 之间" />
                             </el-form-item>
                             <el-form-item label="帖子内容">
                                 <text-editor v-model="post.content" style="flex-grow: 1" />

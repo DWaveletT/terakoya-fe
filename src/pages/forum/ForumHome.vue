@@ -8,9 +8,20 @@
         </el-header>
 
         <div class="main-container">
+
             <el-main class="main">
-                <block-hotspot />
-                <block-section />
+                <h2>主页还没写好</h2>
+
+                下面是目前可以访问的地址：
+
+                <ul>
+                    <li><router-link to="/post">帖子列表</router-link></li>
+                    <li><router-link to="/post/new">新建帖子</router-link></li>
+                    <li><router-link to="/post/pid">帖子详情</router-link></li>
+                    <li><router-link to="/user">个人中心</router-link></li>
+                    <li><router-link to="/">首页</router-link></li>
+                </ul>
+                
             </el-main>
         </div>
 

@@ -53,18 +53,6 @@ const currentData = {
     replys: testdata.testReply
 }
 
-// id: number;
-// time: number;
-// replyer: {
-//     id: number;
-//     name: string;
-//     role: number;
-// };
-// post: number;
-// content: string;
-// like: number;
-// dislike: number;
-
 </script>
 
 <style scoped lang="scss">

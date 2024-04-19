@@ -1,5 +1,5 @@
 <template>
-    <common-layout :admin="true" :bread="['level1', 'level2', 'level3']" title="管理后台">
+    <common-layout :admin="true" :bread="['寺子屋', '管理后台']" title="管理后台">
         <el-row style="flex: 1">
             <el-col :span="5" class="aside">
                 <el-affix target=".aside">
@@ -7,7 +7,7 @@
                         default-active="2"
                         @select="(index) => { manageIndex = index }"
                     >
-                        <div style="text-align: center; margin: 1em 1em">
+                        <div style="text-align: center; margin: 0.5em 0.5em">
                             <font-awesome-icon :icon="faGears" size="2x" />
 
                             <el-divider />

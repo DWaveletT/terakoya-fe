@@ -44,19 +44,6 @@ import { useTestdata } from '@/stores/test';
 
 const testdata = useTestdata();
 
-// id: number;
-//     time: number;
-//     poster: {
-//         id: number;
-//         name: string;
-//         role: number;
-//     };
-//     board: number;
-//     title: string;
-//     content: string;
-//     like: number;
-//     dislike: number;
-
 const currentData = {
     total: 1000,
     posts: testdata.testPost
