@@ -133,10 +133,10 @@ import TextEditor from '@/components/text/TextEditor.vue';
 import { ElContainer, ElMain } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
-import { inject, onMounted, reactive, ref } from 'vue';
+import { inject, onMounted, ref } from 'vue';
 
 import { useAuth } from '@/stores/auth';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import { useTestdata } from '@/stores/test';
 import { useUtil } from '@/stores/util';
@@ -181,7 +181,9 @@ function queryPostDetail(){
     let pid = util.parseParamInt('pid');
 
     if(pid === undefined){
-        router.push('/error');
+        currentData.value = {
+            post: util.nonePost, replys: [] as Reply[], total: 0
+        }
         return;
     }
 
@@ -190,7 +192,9 @@ function queryPostDetail(){
     console.log(testpost);
 
     if(testpost === undefined){
-        router.push('/error');
+        currentData.value = {
+            post: util.nonePost, replys: [] as Reply[], total: 0
+        }
         return;
     }
 

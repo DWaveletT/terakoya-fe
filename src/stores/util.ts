@@ -42,6 +42,17 @@ export const useUtil = defineStore('util', () => {
         dislike: 0
     };
 
+    const nonePost: Post = {
+        id: 0,
+        time: 0,
+        poster: fakeUser,
+        board: 0,
+        title: '不存在的帖子',
+        content: '请检查帖子 ID 是否正确',
+        like: 0,
+        dislike: 0
+    };
+
     function parseParamString(key: string): string | undefined {
         const result = route.params[key];
     
@@ -111,7 +122,7 @@ export const useUtil = defineStore('util', () => {
     }
 
     return {
-        fakeUser, fakePost, fakeBoard, fakeReply,
+        fakeUser, fakePost, fakeBoard, fakeReply, nonePost,
         parseParamInt, parseParamString,
         parseQueryInt, parseQueryString,
     }
