@@ -1,5 +1,8 @@
 <template>
-    <common-layout :bread="['寺子屋', '帖子列表']" title="帖子列表">
+    <common-layout :bread="[
+            {label: '寺子屋', name: 'home'},
+            {label: '帖子列表'}
+        ]" title="帖子列表">
         <div class="main-container">
             <el-row :gutter="20">
                 <el-col :span="6">

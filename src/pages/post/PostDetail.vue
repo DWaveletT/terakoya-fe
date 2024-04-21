@@ -1,7 +1,11 @@
 <template>
     <common-layout
         :title="currentData.post.title"
-        :bread="['首页', '讨论详情']"
+        :bread="[
+            {label: '寺子屋', name: 'home'},
+            {label: '帖子列表', name: 'post.list'},
+            {label: '讨论详情'}
+        ]"
     >
         <el-container class="main-container">
             <el-main class="main">

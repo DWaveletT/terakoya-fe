@@ -1,5 +1,9 @@
 <template>
-    <common-layout>
+    <common-layout
+        :bread="[
+            {label: '寺子屋', name: 'home'},
+            {label: '用户中心' },
+        ]" title="用户中心">
             <el-card class="main-container">
                 <el-tabs v-model="curTab">
                     <el-tab-pane label="个性" name="avatar">

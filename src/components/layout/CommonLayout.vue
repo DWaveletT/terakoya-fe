@@ -4,7 +4,9 @@
             <div class="content">
                 <div>
                     <el-breadcrumb separator="/" style="margin-top: 1em;">
-                        <el-breadcrumb-item v-for="i in prop.bread" :key="i" >{{ i }}</el-breadcrumb-item>
+                        <el-breadcrumb-item v-for="i in prop.bread" :key="i.label" :to="{ name: i.name }" >
+                            {{ i.label }}
+                        </el-breadcrumb-item>
                     </el-breadcrumb>
 
                     <h2 v-if="prop.title" style="color: var(--theme-color-1);">{{ prop.title }}</h2>
@@ -52,7 +54,7 @@ const showLogin = ref(false);
 const prop = withDefaults(defineProps<{
     admin?: boolean,
     title?: string,
-    bread?: Array<string>
+    bread?: Array<{ label: string, name?: string }>
 }>(), {
     admin: false
 });

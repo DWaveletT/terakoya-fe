@@ -3,8 +3,8 @@
         :content="date.toLocaleDateString() + ' ' + date.toLocaleTimeString()"
         :placement="props.placement"
     >{{
-        props.date.getMonth().toString() + ' 月 ' + 
-        props.date.getDay  ().toString() + ' 日'
+        (props.date.getMonth() + 1).toString() + ' 月 ' + 
+        props.date.getDay()        .toString() + ' 日'
     }}</el-tooltip>
 </template>
 
