@@ -29,7 +29,7 @@ jobs:
           node-version: 'latest'
           cache: 'pnpm'
 
-      - run: pnpm config set @fortawesome:registry https://registry.npmjs.org/
+      - run: pnpm config set registry registry=http://registry.npm.taobao.org/
 
       - run: pnpm install --production
       - run: pnpm run build-only
