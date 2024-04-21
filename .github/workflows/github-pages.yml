@@ -29,7 +29,6 @@ jobs:
           node-version: 'latest'
           cache: 'pnpm'
 
-      - run: pnpm ci
       - run: pnpm test
       - run: pnpm run generate
 
