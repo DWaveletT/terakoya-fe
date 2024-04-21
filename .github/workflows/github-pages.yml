@@ -30,7 +30,7 @@ jobs:
           cache: 'pnpm'
 
       - run: pnpm install --production
-      - run: pnpm run build
+      - run: pnpm run build-only
 
       - name: deploy
         uses: peaceiris/actions-gh-pages@v4
