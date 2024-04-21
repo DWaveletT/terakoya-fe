@@ -14,9 +14,6 @@ importers:
       '@fortawesome/free-solid-svg-icons':
         specifier: ^6.5.2
         version: 6.5.2
-      '@fortawesome/vue-fontawesome':
-        specifier: ^3.0.6
-        version: 3.0.6(@fortawesome/fontawesome-svg-core@6.5.2)(vue@3.4.21(typescript@5.4.5))
       '@tsconfig/node20':
         specifier: ^20.1.4
         version: 20.1.4
@@ -54,6 +51,9 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(vue@3.4.21(typescript@5.4.5))
     devDependencies:
+      '@fortawesome/vue-fontawesome':
+        specifier: ^3.0.6
+        version: 3.0.6(@fortawesome/fontawesome-svg-core@6.5.2)(vue@3.4.21(typescript@5.4.5))
       '@rushstack/eslint-patch':
         specifier: ^1.8.0
         version: 1.10.2
