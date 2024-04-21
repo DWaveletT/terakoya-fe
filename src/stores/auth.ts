@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import type { User } from '@/interface';
 
 export const useAuth = defineStore('auth', () => {
-    const isLoggedIn = ref(false);
+    const isLoggedIn = ref(true);
     const currentUser = {
       id: 0,
       name: '尚未登录',

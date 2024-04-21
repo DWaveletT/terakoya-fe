@@ -7,7 +7,9 @@
             <el-main class="main">
                 <c-bubble :user="currentData.post.poster" border-color="var(--el-color-warning)">
                     <template #header>
-                        <c-username :user="currentData.post.poster" /> / {{ currentData.post.time }}
+                        <c-username :user="currentData.post.poster" />
+                        /
+                        <c-date :date="new Date(currentData.post.time)" />
                         <div class="reply-operator">
                             楼主
                         </div>
@@ -22,7 +24,7 @@
 
                 <c-bubble v-for="i in currentData.replys" :key="i.id" :user="i.replyer">
                     <template #header>
-                        <c-username :user="i.replyer" /> / {{ i.time }}
+                        <c-username :user="i.replyer" /> / <c-date :date="new Date(i.time)" />
                         <div class="reply-operator">
                             <span @click="doReplyLike(i.id)">
                                 <font-awesome-icon :icon="faThumbsUp" /> {{ i.like }}
@@ -54,7 +56,7 @@
                     </template>
 
                     <div class="reply-buttons">
-                        <el-button type="danger" plain>清除</el-button>
+                        <el-button type="danger" plain @click="replyContent = ''">清除</el-button>
                         <el-button type="primary">回复</el-button>
                     </div>
                 </el-card>
@@ -76,7 +78,7 @@
                             </div>
                             <div class="info-item">
                                 <div><font-awesome-icon :icon="faClock" /> 发布时间</div>
-                                <div>{{ currentData.post.time }}</div>
+                                <c-date :date="new Date(currentData.post.time)" type="detail" />
                             </div>
                             <div class="info-item">
                                 <div><font-awesome-icon :icon="faComment" /> 回复个数</div>
@@ -121,6 +123,7 @@ import { faThumbsUp, faThumbsDown, faUser, faComment, faClock } from '@fortaweso
 import CommonLayout from '@/components/layout/CommonLayout.vue';
 
 import CBubble from '@/components/common/CBubble.vue';
+import CDate from '@/components/common/CDate.vue';
 import CInfoCard from '@/components/common/CInfoCard.vue';
 
 import CUsername from '@/components/user/CUsername.vue';

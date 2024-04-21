@@ -16,7 +16,7 @@
                                 </el-col>
                                 <el-col :span="7" class="card-item">
                                     <h3 class="title" style="margin-top: 0">{{ post.title }}</h3>
-                                    <span style="font-size: small"><c-username :user="post.poster" /> <span style="color: var(--el-color-info); ">发表于 {{ post.time }}</span></span>
+                                    <span style="font-size: small"><c-username :user="post.poster" /> <span style="color: var(--el-color-info); ">发表于 <c-date :date="new Date(post.time)" placement="bottom" /></span></span>
                                 </el-col>
                                 <el-col :span="12" class="card-item describe">
                                     {{ post.content }}
@@ -48,6 +48,7 @@
 import CommonLayout from '@/components/layout/CommonLayout.vue';
 
 import CAvatar from '@/components/common/CAvatar.vue';
+import CDate from '@/components/common/CDate.vue';
 import CUsername from '@/components/user/CUsername.vue';
 
 import BlockSidebar from '@/components/post/BlockSidebar.vue';

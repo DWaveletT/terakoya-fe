@@ -1,10 +1,6 @@
-import DashBoard from '@/pages/admin/DashBoard.vue'
 import UserHome from '@/pages/auth/UserHome.vue'
 import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
-import PostDetail from '@/pages/post/PostDetail.vue'
-import PostList from '@/pages/post/PostList.vue'
-import PostNew from '@/pages/post/PostNew.vue'
 
 import PageNotFound from '../pages/PageNotFound.vue'
 
@@ -21,22 +17,22 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: DashBoard
+      component:  () => import('../pages/admin/DashBoard.vue')
     },
     {
       path: '/post',
       name: 'post.list',
-      component: PostList
+      component: () => import('../pages/post/PostList.vue')
     },
     {
       path: '/post/new',
       name: 'post.new',
-      component: PostNew
+      component: () => import('../pages/post/PostNew.vue')
     },
     {
       path: '/post/:pid',
       name: 'post.detail',
-      component: PostDetail
+      component: () => import('../pages/post/PostDetail.vue')
     },
     {
       path: '/user',
