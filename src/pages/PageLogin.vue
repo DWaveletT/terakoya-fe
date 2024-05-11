@@ -41,7 +41,8 @@ import {
     ElForm,
     ElFormItem,
     ElInput,
-    ElButton
+    ElButton,
+    ElLink
 } from 'element-plus';
 
 import UserCreate from '@/components/user/UserCreate.vue';
@@ -63,6 +64,8 @@ const router = useRouter();
 
 interface LoginResponse {
     id: number,
+    username: string,
+    role: number,
     token: string
 }
 
@@ -83,10 +86,11 @@ async function doLogin() {
             type: 'success',
         });
 
-        console.log(e);
-
-        auth.currentUser.id   = e.data.id;
-        auth.currentUser.role = 2;
+        auth.setUser({
+            id: e.data.id,
+            name: e.data.username,
+            role: e.data.role,
+        });
 
         auth.setLogin(true);
         auth.setToken(e.data.token);

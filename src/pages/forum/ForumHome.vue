@@ -146,22 +146,13 @@ const router = useRouter();
 
 const testdata = useTestdata();
 
-const currentData = ref<{
-    posts: Post[],
-    responses: [Reply, Board][]
-}>({
-    posts: [],
-    responses: []
-});
-
-const latestPosts = ref<Post []>(testdata.testPost);
-const latestReplies = ref<Reply[]>(testdata.testReply);
+const latestPosts = ref<Post []>([]);
+const latestReplies = ref<Reply[]>([]);
 
 type  PostListResponse =  BgPost[];
 
 interface ReplyListResponse {
-    replies: Reply[],
-    boards: Board[]
+    replies: BgReply[],
 }
 
 function jumpPostDetail(pid: number){
@@ -169,69 +160,69 @@ function jumpPostDetail(pid: number){
 }
 
 async function queryPostList(){
-    // await axios<PostListResponse>({
-    //     url: 'http://43.143.171.43:9999/api/post/latest',
-    //     method: 'POST',
-    //     data: {
-    //         page: 1,
-    //         token: auth.getToken()
-    //     },
-    //     withCredentials: true
-    // })
-    // .then((e: AxiosResponse<PostListResponse>) => {
-    //     latestPosts.value = [];
+    await axios<PostListResponse>({
+        url: 'http://43.143.171.43:9999/api/post/latest',
+        method: 'POST',
+        data: {
+            page: 1,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    })
+    .then((e: AxiosResponse<PostListResponse>) => {
+        latestPosts.value = [];
 
-    //     e.data.forEach((bgPost) => { latestPosts.value.push(util.conveyPost(bgPost)); });
-    // })
-    // .catch((e: AxiosError) => {
-    //     let response = e.response;
-    //     if(!response || !response.data){
-    //         ElNotification({
-    //             title: '未知错误',
-    //             message: '',
-    //             type: 'error',
-    //         });
-    //     } else {
-    //         ElNotification({
-    //             title: '最新帖子获取失败',
-    //             message: (response.data as ErrorResponse).message,
-    //             type: 'error',
-    //         });
-    //     }
-    // });
+        e.data.forEach((bgPost) => { latestPosts.value.push(util.conveyPost(bgPost)); });
+    })
+    .catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '最新帖子获取失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
 }
 
 async function queryReplyList(){
-    // await axios<ReplyListResponse>({
-    //     url: 'http://43.143.171.43:9999/api/reply/latest',
-    //     method: 'POST',
-    //     data: {
-    //         page: 1,
-    //         token: auth.getToken()
-    //     },
-    //     withCredentials: true
-    // })
-    // .then((e: AxiosResponse<ReplyListResponse>) => {
-    //     latestPosts.value = [];
+    await axios<ReplyListResponse>({
+        url: 'http://43.143.171.43:9999/api/reply/latest',
+        method: 'POST',
+        data: {
+            page: 1,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    })
+    .then((e: AxiosResponse<ReplyListResponse>) => {
+        latestReplies.value = [];
 
-    //     e.data.forEach((bgReply) => { latestReply.value.push(util.conveyReply(bgReply)); });
-    // })
-    // .catch((e: AxiosError) => {
-    //     let response = e.response;
-    //     if(!response || !response.data){
-    //         ElNotification({
-    //             title: '未知错误',
-    //             message: '',
-    //             type: 'error',
-    //         });
-    //     } else {
-    //         ElNotification({
-    //             title: '最新回复获取失败',
-    //             message: (response.data as ErrorResponse).message,
-    //             type: 'error',
-    //         });
-    //     }
-    // });
+        e.data.replies.forEach((bgReply) => { latestReplies.value.push(util.conveyReply(bgReply)); });
+    })
+    .catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '最新回复获取失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
 }
 
 onMounted(() => {
@@ -358,6 +349,8 @@ onMounted(() => {
 
     opacity: 0.6;
 
+    color: black;
+
     transition: 0.2s ease-in-out opacity;
 
     &:hover {
@@ -385,6 +378,11 @@ onMounted(() => {
 .block-card {
     background-color: rgb(from white r g b / 0.5);
     padding: 1em 0.5em;
+
+    &:not(:last-child){
+        margin-bottom: 2em;
+    }
+    
 }
 
 .subtitle {

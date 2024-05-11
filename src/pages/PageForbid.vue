@@ -7,10 +7,6 @@
                 <img src="/404.png" width="300px">
 
                 <h2 class="title">权限不足</h2>
-
-                {{ auth.getLogin() }}
-
-                {{ auth.currentUser }}
             </div>
         </el-card>
     </common-layout>

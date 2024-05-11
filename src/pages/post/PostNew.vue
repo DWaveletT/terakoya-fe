@@ -47,6 +47,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { isArray } from 'element-plus/es/utils/types.mjs';
 
 import axios, { AxiosError, type AxiosResponse } from 'axios';
+import { useAuth } from '@/stores/auth';
 
 const info = useInfo();
 
@@ -58,6 +59,8 @@ onMounted(() => {
 
 const route = useRoute();
 const router = useRouter();
+
+const auth = useAuth();
 
 function getBoardId() {
     let result = route.query['boardId'];
@@ -93,7 +96,8 @@ async function doPostCreate(){
         data: {
             board: boardId.value,
             title: post.value.title,
-            content: post.value.content
+            content: post.value.content,
+            token: auth.getToken()
         },
         withCredentials: true
     }).then((e: AxiosResponse<PostResponse>) => {

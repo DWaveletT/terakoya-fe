@@ -57,6 +57,8 @@ function swtichRegister() {
 
 interface LoginResponse {
     id: number,
+    name: string,
+    role: number,
     token: string
 }
 
@@ -79,7 +81,11 @@ async function doLogin() {
             type: 'success',
         });
 
-        auth.currentUser.id = e.data.id;
+        auth.setUser({
+            id: e.data.id,
+            name: e.data.name,
+            role: e.data.role,
+        });
 
         auth.setLogin(true);
         auth.setToken(e.data.token);

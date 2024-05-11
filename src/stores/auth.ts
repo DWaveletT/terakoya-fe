@@ -3,17 +3,23 @@ import { defineStore } from 'pinia'
 
 import type { User } from '@/interface';
 
-
 export const useAuth = defineStore('auth', () => {
 
     let login = ref(sessionStorage.getItem('login') === 'true');
     let token = ref(sessionStorage.getItem('token') || '');
 
-    const currentUser = ref<User>({
-      id: 0,
-      name: '尚未登录',
-      role: 0
-    });
+    function readUser(){
+      const result = JSON.parse(sessionStorage.getItem('user') || '{}');
+      
+      const user: User = {
+        id: result['id'] || 0,
+        name: result['name'] || '未知用户',
+        role: result['role'] || 0,
+      }
+      return user;
+    }
+
+    const currentUser = ref<User>(readUser());
 
     function setLogin(l: boolean){
       login.value = l;
@@ -30,5 +36,12 @@ export const useAuth = defineStore('auth', () => {
       return token.value;
     }
 
-    return { setLogin, setToken, getLogin, getToken, currentUser };
+    function setUser(user: User){
+      console.log(user);
+      
+      sessionStorage.setItem('user', JSON.stringify(user));
+      currentUser.value = user;
+    }
+
+    return { setLogin, setToken, getLogin, getToken, setUser, currentUser };
 });

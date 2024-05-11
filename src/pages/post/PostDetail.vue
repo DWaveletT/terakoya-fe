@@ -56,6 +56,7 @@
                         <el-button type="primary">回复</el-button>
                     </div>
                 </el-card>
+                
             </el-main>
 
             <aside class="aside">
@@ -86,7 +87,7 @@
                     <div class="post-operator">
                         <div>
                             <el-button type="primary" plain @click="scrollToReply">回复</el-button>
-                            <el-button type="danger" plain @click="doPostDelete">删除</el-button>
+                            <el-button type="danger" plain @click="confirmDelete">删除</el-button>
                         </div>
                     </div>
                 </el-affix>
@@ -117,7 +118,7 @@ import UserLogin from '../../components/user/UserLogin.vue';
 import TextRender from '@/components/text/TextRender.vue';
 import TextEditor from '@/components/text/TextEditor.vue';
 
-import { ElContainer, ElMain, ElNotification } from 'element-plus';
+import { ElContainer, ElMain, ElMessage, ElMessageBox, ElNotification } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
 import { inject, onMounted, ref, watch } from 'vue';
@@ -138,7 +139,6 @@ const util = useUtil();
 
 const router = useRouter();
 
-
 const showLogin = ref(false);
 
 // ===== Reply Area =====
@@ -146,9 +146,8 @@ const showLogin = ref(false);
 const reply = ref<HTMLElement>(null!);
 const replyContent = ref('');
 
-const scrollbarWrap = inject<HTMLDivElement | null>('scrollbar-wrap');
 function scrollToReply() {
-    scrollbarWrap?.scrollTo({ top: reply.value.offsetTop - 10, behavior: 'smooth' });
+    reply.value.scrollIntoView();
 }
 
 // ===== Test Area ======
@@ -219,9 +218,60 @@ async function queryPostDetail(){
     });
 }
 
-function doPostDelete() {
-    console.log('do post delete');
-    
+async function doPostDelete(){
+    axios<PostResponse>({
+        url: 'http://43.143.171.43:9999/api/post/delete',
+        method: 'POST',
+        data: {
+            pid: currentData.value.post.id,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    }).then((e: AxiosResponse<PostResponse>) => {
+        ElMessage({
+            type: 'success',
+            message: '删除成功',
+        });
+        router.push('/post');
+
+    }).catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '删除失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
+}
+
+function confirmDelete(){
+    ElMessageBox.confirm(
+    '确定要删除吗？',
+    '警告',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+        doPostDelete();
+    })
+    .catch(() => {
+        ElMessage({
+            type: 'info',
+            message: '删除取消',
+        })
+        
+    })
 }
 
 onMounted(() => {
@@ -246,9 +296,6 @@ watch(page, () => {
     justify-content: center;
 }
 
-// .nav-aside {
-//     max-width: 50px;
-// }
 
 .aside {
 

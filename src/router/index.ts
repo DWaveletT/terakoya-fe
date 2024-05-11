@@ -21,15 +21,15 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component:  () => import('../pages/admin/DashBoard.vue'),
-      // beforeEnter: (to, from, next) => {
-      //   const auth = useAuth();
+      beforeEnter: (to, from, next) => {
+        const auth = useAuth();
 
-      //   if(auth.currentUser.role !== 2){
-      //     next({ name: 'forbid' });
-      //   } else {
-      //     next();
-      //   }
-      // }
+        if(auth.currentUser.role !== 2){
+          next({ name: 'forbid' });
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/user',
@@ -49,12 +49,32 @@ const router = createRouter({
     {
       path: '/post',
       name: 'post.list',
-      component: () => import('../pages/post/PostList.vue')
+      component: () => import('../pages/post/PostList.vue'),
+      
+      beforeEnter: (to, from, next) => {
+        const auth = useAuth();
+
+        if(auth.getLogin() !== true){
+          next({ name: 'login' });
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/post/new',
       name: 'post.new',
-      component: () => import('../pages/post/PostNew.vue')
+      component: () => import('../pages/post/PostNew.vue'),
+      
+      beforeEnter: (to, from, next) => {
+        const auth = useAuth();
+
+        if(auth.getLogin() !== true){
+          next({ name: 'login' });
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/post/:pid',
