@@ -107,7 +107,6 @@ const props = withDefaults(defineProps<{
     left: -64px;
     top: -4px;
 
-    border-radius: 24px;
     border: 1px solid var(--border-color);
 }
 

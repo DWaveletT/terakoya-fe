@@ -30,15 +30,20 @@ import { ElSpace } from 'element-plus';
 
 import UserCreate from './UserCreate.vue';
 
+import { useAuth } from '@/stores/auth';
+
 import { ref } from 'vue';
 
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
+import type { ErrorResponse } from '@/interface';
 
 const show = defineModel<boolean>({ required: true });
 const showReg = ref(false);
 
 const username = ref('');
 const password = ref('');
+
+const auth = useAuth();
 
 function switchLogin() {
     showReg.value = false;
@@ -51,40 +56,49 @@ function swtichRegister() {
 }
 
 interface LoginResponse {
+    id: number,
     token: string
-}
-
-interface ErrorResponse {
-    message: string
 }
 
 async function doLogin() {
     axios<LoginResponse>({
-        url: 'http://localhost:9999/api/user/login',
+        url: 'http://43.143.171.43:9999/api/user/login',
         method: 'POST',
         data: {
             username: username.value,
             password: password.value
         },
         withCredentials: true
+    }).then((e: AxiosResponse<LoginResponse>) => {
+
+        console.log(e.data);
+
+        ElNotification({
+            title: '登录成功',
+            message: '',
+            type: 'success',
+        });
+
+        auth.currentUser.id = e.data.id;
+
+        auth.setLogin(true);
+        auth.setToken(e.data.token);
+
+        show.value = false;
     }).catch((e: AxiosError) => {
         let response = e.response;
         if(!response || !response.data){
-            console.log('未知错误');
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
         } else {
-            if(response.status === 500){
-                ElNotification({
-                    title: '内部错误',
-                    message: '',
-                    type: 'success',
-                })
-            } else 
-            if(response.status === 400){
-                console.log('Bad Request');
-            } else 
-            if(response.status === 401){
-                console.log((response.data as ErrorResponse).message);
-            }
+            ElNotification({
+                title: '登录失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
         }
     })
 }

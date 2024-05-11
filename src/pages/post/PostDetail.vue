@@ -23,34 +23,26 @@
                     </template>
                 </c-bubble>
 
-                <el-pagination v-if="currentData.replys.length > 5" :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
+                <el-pagination v-if="currentData.replys.length > 5" :page-size="50" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background
                     hide-on-single-page small class="pagination" v-model:current-page="page" />
 
                 <c-bubble v-for="i in currentData.replys" :key="i.id" :user="i.replyer">
                     <template #header>
                         <c-username :user="i.replyer" /> / <c-date :date="new Date(i.time)" />
-                        <div class="reply-operator">
-                            <span @click="doReplyLike(i.id)">
-                                <font-awesome-icon :icon="faThumbsUp" /> {{ i.like }}
-                            </span>
-                            <span @click="doReplyDislike(i.id)">
-                                <font-awesome-icon :icon="faThumbsDown" /> {{ i.dislike }}
-                            </span>
-                        </div>
                     </template>
                     <template #message>
                         <text-render :content="i.content" />
                     </template>
                 </c-bubble>
 
-                <el-pagination hideOnSinglePage :page-size="20" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background small class="pagination" v-model:current-page="page" />
+                <el-pagination hideOnSinglePage :page-size="50" :pager-count="7" layout="prev, pager, next" :total="currentData.total" background small class="pagination" v-model:current-page="page" />
 
                 <div ref="reply" />
 
                 <el-card shadow="hover">
                     <h3 style="margin: 0;">回复帖子</h3>
 
-                    <template v-if="auth.isLoggedIn">
+                    <template v-if="auth.getLogin()">
                         <text-editor v-model="replyContent" placeholder="请在此处回复，支持使用 Markdown。" />
                     </template>
                     <template v-else>
@@ -88,22 +80,10 @@
                                 <div><font-awesome-icon :icon="faComment" /> 回复个数</div>
                                 <div>{{ currentData.total }}</div>
                             </div>
-                            <div class="info-item">
-                                <div><font-awesome-icon :icon="faThumbsUp" /> 点赞量</div>
-                                <div>{{ currentData.post.like }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div><font-awesome-icon :icon="faThumbsDown" /> 点踩量</div>
-                                <div>{{ currentData.post.dislike }}</div>
-                            </div>
                         </div>
                     </c-info-card>
 
                     <div class="post-operator">
-                        <div>
-                            <el-button type="success" plain circle @click="doPostLike"><font-awesome-icon :icon="faThumbsUp" /></el-button>
-                            <el-button type="danger" plain circle @click="doPostDislike"><font-awesome-icon :icon="faThumbsDown" /></el-button>
-                        </div>
                         <div>
                             <el-button type="primary" plain @click="scrollToReply">回复</el-button>
                             <el-button type="danger" plain @click="doPostDelete">删除</el-button>
@@ -137,10 +117,10 @@ import UserLogin from '../../components/user/UserLogin.vue';
 import TextRender from '@/components/text/TextRender.vue';
 import TextEditor from '@/components/text/TextEditor.vue';
 
-import { ElContainer, ElMain } from 'element-plus';
+import { ElContainer, ElMain, ElNotification } from 'element-plus';
 import { ElCard, ElButton, ElPagination, ElAffix, ElDivider } from 'element-plus';
 
-import { inject, onMounted, ref } from 'vue';
+import { inject, onMounted, ref, watch } from 'vue';
 
 import { useAuth } from '@/stores/auth';
 import { useRouter } from 'vue-router';
@@ -148,14 +128,16 @@ import { useRouter } from 'vue-router';
 import { useTestdata } from '@/stores/test';
 import { useUtil } from '@/stores/util';
 
-import type { Reply } from '@/interface';
+import type { BgPost, BgReply, ErrorResponse, Reply } from '@/interface';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
 
 // =====  Auth Area =====
 
 const auth = useAuth();
+const util = useUtil();
+
 const router = useRouter();
 
-const util = useUtil();
 
 const showLogin = ref(false);
 
@@ -181,9 +163,13 @@ const currentData = ref({
 
 const page = ref(util.parseQueryInt('page') || 1);
 
-function queryPostDetail(){
+interface PostResponse {
+    post: BgPost,
+    replyCOunt: number,
+    replies: BgReply[]
+}
 
-    console.log('query post detail');
+async function queryPostDetail(){
 
     let pid = util.parseParamInt('pid');
 
@@ -194,22 +180,43 @@ function queryPostDetail(){
         return;
     }
 
-    let testpost = testData.testPost.find((post) => post.id === pid);
+    await axios<PostResponse>({
+        url: `http://43.143.171.43:9999/api/post/${pid}`,
+        method: 'POST',
+        data: {
+            page: page.value
+        },
+        withCredentials: true
+    })
+    .then((e: AxiosResponse<PostResponse>) => {
+        console.log(e.data);
+        
+        currentData.value.post = util.conveyPost(e.data.post);
+        currentData.value.replys = [];
+        currentData.value.total = e.data.replies.length;
 
-    console.log(testpost);
-
-    if(testpost === undefined){
+        e.data.replies.forEach((bgReply) => { currentData.value.replys.push(util.conveyReply(bgReply))});
+    })
+    .catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '帖子内容获取失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+        
         currentData.value = {
             post: util.nonePost, replys: [] as Reply[], total: 0
         }
-        return;
-    }
-
-    currentData.value = {
-        post: testpost,
-        replys: testData.testReply.filter((i) => i.post === testpost.id),
-        total: 100
-    }
+    });
 }
 
 function doPostDelete() {
@@ -217,25 +224,11 @@ function doPostDelete() {
     
 }
 
-function doPostLike() {
-    console.log('do post like');
-}
-
-function doPostDislike() {
-    console.log('do post dislike');
-
-}
-
-function doReplyLike(rid: number) {
-    console.log('do reply like', rid);
-
-}
-
-function doReplyDislike(rid: number) {
-    console.log('do reply dislike', rid);
-}
-
 onMounted(() => {
+    queryPostDetail();
+});
+
+watch(page, () => {
     queryPostDetail();
 });
 
@@ -334,3 +327,12 @@ onMounted(() => {
     }
 }
 </style>
+    length: number;{
+                id: 0,
+                time: 0,
+                replyer: undefined,
+                post: 0,
+                content: '',
+                like: 0,
+                dislike: 0
+            }

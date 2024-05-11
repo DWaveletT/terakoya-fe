@@ -8,7 +8,7 @@
                         @click="boardId = 0">
                         所有版块
                     </div>
-                    <div v-for="board in info.boards" :key="board.id" class="board-item"
+                    <div v-for="board in boards" :key="board.id" class="board-item"
                         :class="{ selected: boardId === board.id }" @click="boardId = board.id">
                         {{ board.name }}
                     </div>
@@ -17,7 +17,7 @@
         </el-card>
         <el-card style="margin-top: 0.5em">
             <h3 class="title">版块说明</h3>
-            <p>{{ boardInfo }}</p>
+            <p>{{ getDescription() }}</p>
         </el-card>
     </el-affix>
 </template>
@@ -25,8 +25,10 @@
 <script setup lang="ts">
 import { ElAffix, ElCard, ElScrollbar } from 'element-plus';
 
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useInfo } from '@/stores/config';
+import { useAuth } from '@/stores/auth';
+import type { Board } from '@/interface';
 
 const props = withDefaults(defineProps<{
     all?: boolean
@@ -34,12 +36,21 @@ const props = withDefaults(defineProps<{
     all: false
 });
 
+const auth = useAuth();
 const info = useInfo();
 
+const boards = ref<Board[]>([]);
+
+onMounted(() => {
+    info.getBoards().then((b) => boards.value = b);
+})
+
 const boardId = defineModel<number>({ required: true });
-const boardInfo = computed(() => {
-    return info.boards.find((board) => { return board.id === boardId.value })?.description || '请在上方版块列表里选择一个版块。';
-});
+
+function getDescription(){
+    return boards.value.find((b) => b.id === boardId.value )?.description || '';
+}
+
 
 </script>
 
@@ -52,7 +63,6 @@ const boardInfo = computed(() => {
     background-color: var(--el-color-primary-light-8);
 
     transition: background-color 0.2s ease-in-out;
-
 
     &.all {
         color: var(--el-color-success-dark-2);

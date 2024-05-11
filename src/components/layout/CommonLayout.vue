@@ -15,12 +15,12 @@
             
             <div class="user">
                 <c-avatar :user="auth.currentUser" style="margin-right: 1em" />
-                    <router-link to="/user" v-if="auth.isLoggedIn" style="text-decoration: none;">
-                        <div class="username">{{ auth.currentUser.name }}</div>
-                    </router-link>
-                    <el-link @click="showLogin = true" :underline="false" v-else>
-                        <div class="username">{{ auth.currentUser.name }}</div>
-                    </el-link>
+                <router-link to="/user" v-if="auth.getLogin()" style="text-decoration: none;">
+                    <div class="username">{{ auth.currentUser.name }}</div>
+                </router-link>
+                <el-link @click="showLogin = true" :underline="false" v-else>
+                    <div class="username">{{ auth.currentUser.name }}</div>
+                </el-link>
             </div>
         </el-header>
 
@@ -46,9 +46,10 @@ import CAvatar from '../common/CAvatar.vue';
 
 import { useAuth } from '@/stores/auth';
 
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const auth = useAuth();
+
 const showLogin = ref(false);
 
 const prop = withDefaults(defineProps<{

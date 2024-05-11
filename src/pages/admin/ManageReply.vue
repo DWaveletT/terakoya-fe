@@ -1,13 +1,13 @@
 <template>
     <el-pagination
-        :page-size="20"
+        :page-size="50"
         :pager-count="11"
         layout="prev, pager, next"
         :total="currentData.total"
         style="justify-content: right; margin-bottom: 1em;"
     />
 
-    <el-table :data="currentData.replys" stripe style="width: 100%">
+    <el-table :data="currentData.replies" stripe style="width: 100%">
         <el-table-column prop="id" label="编号" width="80" />
         <el-table-column prop="time" label="发布时间" width="120" />
         <el-table-column label="发布用户" width="100">
@@ -32,7 +32,7 @@
     </el-table>
 
     <el-pagination
-        :page-size="20"
+        :page-size="50"
         :pager-count="11"
         layout="prev, pager, next"
         :total="currentData.total"
@@ -42,16 +42,69 @@
 
 <script setup lang="ts">
 
-import { ElTable, ElTableColumn, ElButton, ElPagination } from 'element-plus';
+import { ElTable, ElTableColumn, ElButton, ElPagination, ElNotification } from 'element-plus';
 
 import { useTestdata } from '@/stores/test';
+import { useAuth } from '@/stores/auth';
+import { useUtil } from '@/stores/util';
+import { onMounted, ref, watch } from 'vue';
+import type { BgReply, ErrorResponse, Reply } from '@/interface';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
 
-const testdata = useTestdata();
+const page = ref(1);
+const replyer = ref(0);
 
-const currentData = {
-    total: 1000,
-    replys: testdata.testReply
+const auth = useAuth();
+const util = useUtil();
+
+const currentData = ref({
+    total: 0,
+    replies: [] as Reply[]
+});
+
+type PostListResponse = BgReply[];
+
+async function queryPostList(){
+    await axios<PostListResponse>({
+        url: 'http://43.143.171.43:9999/api/reply/list',
+        method: 'POST',
+        data: {
+            page: page.value,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    })
+    .then((e: AxiosResponse<PostListResponse>) => {
+        currentData.value.replies = [];
+        currentData.value.total = e.data.length;
+
+        e.data.forEach((bgPost) => { currentData.value.replies.push(util.conveyReply(bgPost)); });
+    })
+    .catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '回复列表获取失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
 }
+
+onMounted(() => {
+    queryPostList();
+});
+
+watch([page, replyer], () => {
+    queryPostList();
+});
 
 </script>
 

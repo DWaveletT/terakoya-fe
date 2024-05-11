@@ -3,8 +3,11 @@ import ForumHome from '@/pages/forum/ForumHome.vue'
 import TestPage from '@/pages/forum/TestPage.vue'
 
 import PageNotFound from '../pages/PageNotFound.vue'
+import PageForbid from '../pages/PageForbid.vue';
+import PageLogin  from  '../pages/PageLogin.vue';
 
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +20,31 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component:  () => import('../pages/admin/DashBoard.vue')
+      component:  () => import('../pages/admin/DashBoard.vue'),
+      // beforeEnter: (to, from, next) => {
+      //   const auth = useAuth();
+
+      //   if(auth.currentUser.role !== 2){
+      //     next({ name: 'forbid' });
+      //   } else {
+      //     next();
+      //   }
+      // }
+    },
+    {
+      path: '/user',
+      name: 'user.home',
+      component:  () => import('../pages/auth/UserHome.vue'),
+      
+      beforeEnter: (to, from, next) => {
+        const auth = useAuth();
+
+        if(auth.getLogin() !== true){
+          next({ name: 'login' });
+        } else {
+          next();
+        }
+      }
     },
     {
       path: '/post',
@@ -35,14 +62,14 @@ const router = createRouter({
       component: () => import('../pages/post/PostDetail.vue')
     },
     {
-      path: '/user',
-      name: 'user.home',
-      component: UserHome
+      path: '/login',
+      name: 'login',
+      component: PageLogin
     },
     {
-      path: '/test',
-      name: 'test',
-      component: TestPage
+      path: '/forbid',
+      name: 'forbid',
+      component: PageForbid
     },
     {
       path: '/:pathMatch(.*)*',

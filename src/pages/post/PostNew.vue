@@ -21,8 +21,8 @@
                         </el-form>
 
                         <div class="submit">
-                            <span>将会发布在 <el-text type="primary" size="large">{{ info.boards.find((board) => { return board.id === boardId })?.name }}</el-text> 版块</span>
-                            <el-button type="primary">发布</el-button>
+                            <span>将会发布在 <el-text type="primary" size="large">{{ boards.find((board) => { return board.id === boardId })?.name }}</el-text> 版块</span>
+                            <el-button type="primary" @click="doPostCreate">发布</el-button>
                         </div>
                     </el-card>
                 </el-col>
@@ -37,17 +37,27 @@ import BlockSidebar from '@/components/post/BlockSidebar.vue';
 
 import TextEditor from '@/components/text/TextEditor.vue';
 
-import { ElRow, ElCol, ElCard, ElButton, ElForm, ElFormItem, ElInput, ElText } from 'element-plus';
+import { ElRow, ElCol, ElCard, ElButton, ElForm, ElFormItem, ElInput, ElText, ElNotification } from 'element-plus';
 
-import { ref } from 'vue';
-import type { Post } from '@/interface';
+import { onMounted, ref } from 'vue';
+import type { Board, ErrorResponse, Post } from '@/interface';
 
 import { useInfo } from '@/stores/config';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { isArray } from 'element-plus/es/utils/types.mjs';
 
+import axios, { AxiosError, type AxiosResponse } from 'axios';
+
 const info = useInfo();
+
+const boards = ref<Board[]>([]);
+
+onMounted(() => {
+    info.getBoards().then((b) => boards.value = b);
+})
+
 const route = useRoute();
+const router = useRouter();
 
 function getBoardId() {
     let result = route.query['boardId'];
@@ -71,6 +81,40 @@ const post = ref<Post>({
     poster: null!,
     time: null!,
 });
+
+interface PostResponse{
+    pid: number
+}
+
+async function doPostCreate(){
+    axios<PostResponse>({
+        url: 'http://43.143.171.43:9999/api/post/create',
+        method: 'POST',
+        data: {
+            board: boardId.value,
+            title: post.value.title,
+            content: post.value.content
+        },
+        withCredentials: true
+    }).then((e: AxiosResponse<PostResponse>) => {
+        router.push('/post/' + e.data.pid);
+    }).catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '创建失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
+}
 
 </script>
 

@@ -1,5 +1,21 @@
-import type { BoardId, PostId, ReplyId } from "./enum";
+import type { BoardId, PostId, ReplyId, UserId } from "./enum";
 import type { User } from "./user";
+
+interface BgPost {
+    id: PostId,
+    releasetime: number,
+    replytime: number,
+    
+    posterid: UserId,
+
+    board: BoardId,
+
+    title: string,
+    content: string,
+
+    role: number,
+    username: string
+}
 
 interface Post {
     id: PostId,
@@ -16,6 +32,16 @@ interface Post {
     dislike: number,
 };
 
+interface BgReply {
+    id : number,
+    replytime : number,
+    replyer : number,
+    role : number,
+    postid : number,
+    username: string,
+    content: string,
+};
+
 interface Reply {
     id: ReplyId,
     time: number,
@@ -30,4 +56,4 @@ interface Reply {
     dislike: number,
 };
 
-export type { Post, Reply };
+export type { Post, Reply, BgPost, BgReply };

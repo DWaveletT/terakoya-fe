@@ -1,5 +1,5 @@
 <template>
-    <common-layout :admin="true" :bread="['寺子屋', '管理后台']" title="管理后台">
+    <common-layout :admin="true" :bread="[{label: '寺子屋', name: 'home'}, {label: '管理后台'}]" title="管理后台">
         <el-row style="flex: 1">
             <el-col :span="5" class="aside">
                 <el-affix target=".aside">

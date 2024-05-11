@@ -14,21 +14,15 @@
                     <div class="cards">
                         <el-card v-for="post in currentData.posts" :key="post.id" class="post-item" @click="jumpPostDetail(post.id)">
                             <el-row style="height: 60px;">
-                                <el-col :span="3" class="card-item vertical-middle">
+                                <el-col :span="4" class="card-item vertical-middle">
                                     <c-avatar :user="post.poster" :size="60" />
                                 </el-col>
-                                <el-col :span="7" class="card-item">
+                                <el-col :span="8" class="card-item">
                                     <h3 class="title" style="margin-top: 0">{{ post.title }}</h3>
                                     <span style="font-size: small"><c-username :user="post.poster" /> <span style="color: var(--el-color-info); ">发表于 <c-date :date="new Date(post.time)" placement="bottom" /></span></span>
                                 </el-col>
                                 <el-col :span="12" class="card-item describe">
                                     {{ post.content }}
-                                </el-col>
-                                <el-col :span="2" class="card-item vertical-middle">
-                                    <div>
-                                        <el-tag type="success" class="info-item"><font-awesome-icon :icon="faThumbsUp" /> {{ post.like > 999 ? '999+' : post.like }}</el-tag>
-                                        <el-tag type="danger" class="info-item"><font-awesome-icon :icon="faThumbsDown" /> {{ post.dislike > 999 ? '999+' : post.dislike }}</el-tag>
-                                    </div>
                                 </el-col>
                             </el-row>
                         </el-card>
@@ -56,7 +50,7 @@ import CUsername from '@/components/user/CUsername.vue';
 
 import BlockSidebar from '@/components/post/BlockSidebar.vue';
 
-import { ElRow, ElCol, ElCard, ElPagination, ElButton, ElTag } from 'element-plus';
+import { ElRow, ElCol, ElCard, ElPagination, ElButton, ElTag, ElNotification } from 'element-plus';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
@@ -64,14 +58,18 @@ import { faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 
 import { onMounted, ref, watch } from 'vue';
 
-import { useTestdata } from '@/stores/test';
 import { useRouter } from 'vue-router';
+import { useAuth } from '@/stores/auth';
+import { useUtil } from '@/stores/util';
 
-import { type Post } from '@/interface';
+import { type ErrorResponse, type BgPost, type Post } from '@/interface';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
+
+const auth = useAuth();
+const util = useUtil();
 
 const boardId = ref(0);
 
-const testdata = useTestdata();
 const router = useRouter();
 
 const page = ref(1);
@@ -93,13 +91,41 @@ function jumpPostNew() {
     }
 }
 
-function queryPostList(){
-    console.log('query', page.value);
+type PostListResponse = BgPost[];
 
-    currentData.value = {
-        total: 100,
-        posts: [...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost, ...testdata.testPost]
-    };
+async function queryPostList(){
+    await axios<PostListResponse>({
+        url: 'http://43.143.171.43:9999/api/post/latest',
+        method: 'POST',
+        data: {
+            page: page.value,
+            bid: boardId.value,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    })
+    .then((e: AxiosResponse<PostListResponse>) => {
+        currentData.value.posts = [];
+        currentData.value.total = e.data.length;
+
+        e.data.forEach((bgPost) => { currentData.value.posts.push(util.conveyPost(bgPost)); });
+    })
+    .catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '帖子列表获取失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+        }
+    });
 }
 
 onMounted(() => {
