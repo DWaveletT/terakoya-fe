@@ -1,16 +1,17 @@
 <template>
     <el-tooltip
-        :content="date.toLocaleDateString() + ' ' + date.toLocaleTimeString()"
+        :content="realdate.toLocaleDateString() + ' ' + realdate.toLocaleTimeString()"
         :placement="props.placement"
     >{{
-        (props.date.getMonth() + 1).toString() + ' 月 ' + 
-        props.date.getDay()        .toString() + ' 日'
+        (realdate.getMonth() + 1).toString() + ' 月 ' + 
+        realdate.getDay()        .toString() + ' 日'
     }}</el-tooltip>
 </template>
 
 <script setup lang="ts">
 
 import { ElTooltip } from 'element-plus';
+import { computed } from 'vue';
 
 const props = withDefaults(defineProps<{
     date: Date,
@@ -18,6 +19,8 @@ const props = withDefaults(defineProps<{
 }>(), {
     placement: 'top'
 });
+
+const realdate = computed(() => { return new Date(props.date.getTime() * 1000); })
 
 </script>
 

@@ -164,7 +164,7 @@ const page = ref(util.parseQueryInt('page') || 1);
 
 interface PostResponse {
     post: BgPost,
-    replyCOunt: number,
+    replyCount: number,
     replies: BgReply[]
 }
 
@@ -192,7 +192,7 @@ async function queryPostDetail(){
         
         currentData.value.post = util.conveyPost(e.data.post);
         currentData.value.replys = [];
-        currentData.value.total = e.data.replies.length;
+        currentData.value.total = e.data.replyCount;
 
         e.data.replies.forEach((bgReply) => { currentData.value.replys.push(util.conveyReply(bgReply))});
     })

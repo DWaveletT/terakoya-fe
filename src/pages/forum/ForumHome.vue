@@ -85,7 +85,7 @@
                         <el-card class="latest-card" shadow="hover">
                             <div class="info" >
                                 <div class="content">
-                                    <div class="head-container" @click="jumpPostDetail(reply.id)">
+                                    <div class="head-container" @click="jumpPostDetail(reply.post)">
                                         <div class="head" style="cursor: pointer;">{{ reply.content }}</div>
                                     </div>
                                 </div>

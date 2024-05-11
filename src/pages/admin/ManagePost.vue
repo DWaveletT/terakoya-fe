@@ -1,7 +1,18 @@
 <template>
-    <div class="filter">
+
+    <h3>筛选器</h3>
+
+    <el-form label-width="auto" >
+        <el-form-item label="关键词">
+            <el-input v-model="keyword" />
+        </el-form-item>
         
-    </div>
+    </el-form>
+    
+    <el-button type="primary" @click="queryPostList">查询</el-button>
+
+    <h3>查询结果<span style=" margin-left: 1em; font-size: small; font-weight: normal;">共 {{ currentData.total }} 条</span></h3>
+
     <el-pagination
         :page-size="50"
         :pager-count="11"
@@ -100,6 +111,7 @@ const util = useUtil();
 const router = useRouter();
 
 const post = ref<Post>(null!);
+const keyword = ref('');
 
 const config = useInfo();
 
@@ -120,6 +132,7 @@ async function queryPostList(){
         data: {
             page: page.value,
             bid: boardId.value,
+            keyword: keyword.value,
             token: auth.getToken()
         },
         withCredentials: true
@@ -163,9 +176,9 @@ async function doPostEdit(){
         method: 'POST',
         data: {
             id: post.value.id,
-            posterid: post.value.poster,
+            posterid: post.value.poster.id,
             releaseTime: post.value.time,
-            replyTime: 0,
+            replyTime: 114514,
             board: post.value.board,
             title: post.value.title,
             content: post.value.content,

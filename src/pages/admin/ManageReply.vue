@@ -1,4 +1,8 @@
 <template>
+
+
+    <h3>查询结果<span style=" margin-left: 1em; font-size: small; font-weight: normal;">共 {{ currentData.total }} 条</span></h3>
+
     <el-pagination
         :page-size="50"
         :pager-count="11"
@@ -91,6 +95,7 @@ const util = useUtil();
 const router = useRouter();
 
 const reply = ref<Reply>(null!);
+const keyword = ref('');
 
 const currentData = ref({
     total: 0,
@@ -108,6 +113,7 @@ async function queryReplyList(){
         method: 'POST',
         data: {
             page: page.value,
+            poster: keyword.value,
             token: auth.getToken()
         },
         withCredentials: true
