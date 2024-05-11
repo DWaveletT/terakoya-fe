@@ -53,7 +53,7 @@
 
                     <div class="reply-buttons">
                         <el-button type="danger" plain @click="replyContent = ''">清除</el-button>
-                        <el-button type="primary">回复</el-button>
+                        <el-button type="primary" @click="doReply">回复</el-button>
                     </div>
                 </el-card>
                 
@@ -248,6 +248,51 @@ async function doPostDelete(){
                 message: (response.data as ErrorResponse).message,
                 type: 'error',
             });
+
+            if(e.response?.status === 401){
+                router.push({ name: 'login' });
+            }
+        }
+    });
+}
+
+function doReply(){
+    axios<PostResponse>({
+        url: 'http://43.143.171.43:9999/api/reply/create',
+        method: 'POST',
+        data: {
+            pid: currentData.value.post.id,
+            content: replyContent.value,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    }).then((e: AxiosResponse<PostResponse>) => {
+        ElMessage({
+            type: 'success',
+            message: '回复成功',
+        });
+
+        replyContent.value = '';
+
+        queryPostDetail();
+
+    }).catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '回复失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+            if(e.response?.status === 401){
+                router.push({ name: 'login' });
+            }
         }
     });
 }
@@ -269,8 +314,7 @@ function confirmDelete(){
         ElMessage({
             type: 'info',
             message: '删除取消',
-        })
-        
+        });
     })
 }
 
@@ -374,12 +418,3 @@ watch(page, () => {
     }
 }
 </style>
-    length: number;{
-                id: 0,
-                time: 0,
-                replyer: undefined,
-                post: 0,
-                content: '',
-                like: 0,
-                dislike: 0
-            }

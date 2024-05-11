@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 
-import type { BgPost, BgReply, Board, Post, Reply, User, UserId } from '@/interface';
+import type { BgPost, BgReply, BgUser, Board, Post, Reply, User, UserId } from '@/interface';
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { isArray } from 'element-plus/es/utils/types.mjs';
 
 export const useUtil = defineStore('util', () => {
@@ -148,7 +148,7 @@ export const useUtil = defineStore('util', () => {
             time: bgReply.replytime,
             
             replyer: {
-                id: bgReply.id,
+                id: bgReply.replyer,
                 name: bgReply.username,
                 role: bgReply.role
             },
@@ -162,11 +162,18 @@ export const useUtil = defineStore('util', () => {
         };
     }
 
+    function conveyUser(bgUser: BgUser): User {
+        return {
+            id: bgUser.uid,
+            name: bgUser.username,
+            role: bgUser.role
+        };
+    }
 
     return {
         fakeUser, fakePost, fakeBoard, fakeReply, nonePost,
         parseParamInt, parseParamString,
         parseQueryInt, parseQueryString,
-        conveyPost, conveyReply
+        conveyPost, conveyReply, conveyUser
     }
 });

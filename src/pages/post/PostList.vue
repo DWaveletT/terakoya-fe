@@ -124,6 +124,9 @@ async function queryPostList(){
                 message: (response.data as ErrorResponse).message,
                 type: 'error',
             });
+            if(e.status === 401){
+                router.push({ name: 'login' });
+            }
         }
     });
 }

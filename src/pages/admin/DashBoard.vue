@@ -4,7 +4,7 @@
             <el-col :span="5" class="aside">
                 <el-affix target=".aside">
                     <el-menu
-                        default-active="2"
+                        default-active="0"
                         @select="(index) => { manageIndex = index }"
                     >
                         <el-menu-item index="0">

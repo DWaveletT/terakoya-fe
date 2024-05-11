@@ -36,6 +36,16 @@ export const useAuth = defineStore('auth', () => {
       return token.value;
     }
 
+    function logout(){
+      setLogin(false);
+      setToken('');
+      sessionStorage.setItem('user', '{}');
+
+      currentUser.value = {
+        id: 0, name: '未知用户', role: 0
+      }
+    }
+
     function setUser(user: User){
       console.log(user);
       
@@ -43,5 +53,5 @@ export const useAuth = defineStore('auth', () => {
       currentUser.value = user;
     }
 
-    return { setLogin, setToken, getLogin, getToken, setUser, currentUser };
+    return { setLogin, setToken, getLogin, getToken, setUser, currentUser, logout };
 });

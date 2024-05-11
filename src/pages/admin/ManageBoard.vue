@@ -40,14 +40,12 @@ import { useTestdata } from '@/stores/test';
 import axios, { AxiosError, type AxiosResponse } from 'axios';
 import type { Board, ErrorResponse } from '@/interface';
 
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useAuth } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+import { useInfo } from '@/stores/config';
 
 const testdata = useTestdata();
-
-const currentData = {
-    total: 1000,
-    boards: testdata.testBoard
-}
 
 const board = ref<Board>({
     id: null!,
@@ -57,21 +55,43 @@ const board = ref<Board>({
 
 const show = ref(false);
 
-interface BoardResponse {
+const currentData = ref({
+    boards: [] as Board[]
+});
+
+const auth = useAuth();
+const config = useInfo();
+const router = useRouter();
+
+interface BoardListResponse {
+    boardCount: number,
+    boards: Board[]
+}
+
+async function queryBoardList(){
+    config.getBoards().then((b) => currentData.value.boards = b);
+}
+
+onMounted(() => {
+    queryBoardList();
+});
+
+interface BoardCreateResponse {
 
 }
 
 async function doBoardCreate(){
-    axios<BoardResponse>({
-        url: 'http://localhost:9999/api/board/create',
+    axios({
+        url: 'http://43.143.171.43:9999/api/board/create',
         method: 'POST',
         data: {
             id: 0,
             name: board.value.name,
-            description: board.value.description
+            description: board.value.description,
+            token: auth.getToken()
         },
         withCredentials: true
-    }).then((e: AxiosResponse<BoardResponse>) => {
+    }).then((e: AxiosResponse) => {
 
         show.value = false;
 
@@ -81,13 +101,15 @@ async function doBoardCreate(){
             type: 'success',
         });
 
+        queryBoardList();
+
     }).catch((e: AxiosError) => {
         let response = e.response;
         if(!response || !response.data){
             ElNotification({
                 title: '未知错误',
                 message: '',
-                type: 'error',
+                type: 'error'
             });
         } else {
             ElNotification({
@@ -95,6 +117,10 @@ async function doBoardCreate(){
                 message: (response.data as ErrorResponse).message,
                 type: 'error',
             });
+
+            if(e.response?.status === 401){
+                router.push({ name: 'login' });
+            }
         }
     });
 }

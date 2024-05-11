@@ -81,6 +81,8 @@ function doUserLogout(){
         auth.setLogin(false);
         auth.setToken('');
 
+        auth.logout();
+
     }).catch((e: AxiosError) => {
         let response = e.response;
         if(!response || !response.data){

@@ -48,6 +48,7 @@ import { isArray } from 'element-plus/es/utils/types.mjs';
 
 import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { useAuth } from '@/stores/auth';
+import { useUtil } from '@/stores/util';
 
 const info = useInfo();
 
@@ -61,6 +62,7 @@ const route = useRoute();
 const router = useRouter();
 
 const auth = useAuth();
+const util = useUtil();
 
 function getBoardId() {
     let result = route.query['boardId'];
@@ -116,6 +118,9 @@ async function doPostCreate(){
                 message: (response.data as ErrorResponse).message,
                 type: 'error',
             });
+            if(e.status === 401){
+                router.push({ name: 'login' });
+            }
         }
     });
 }
