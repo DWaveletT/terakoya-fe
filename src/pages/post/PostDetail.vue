@@ -189,7 +189,7 @@ async function queryPostDetail(){
     })
     .then((e: AxiosResponse<PostResponse>) => {
         console.log(e.data);
-        
+
         currentData.value.post = util.conveyPost(e.data.post);
         currentData.value.replys = [];
         currentData.value.total = e.data.replyCount;
@@ -291,6 +291,7 @@ function doReply(){
                 type: 'error',
             });
             if(e.response?.status === 401){
+                auth.logout();
                 router.push({ name: 'login' });
             }
         }

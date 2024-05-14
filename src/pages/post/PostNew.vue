@@ -119,6 +119,7 @@ async function doPostCreate(){
                 type: 'error',
             });
             if(e.status === 401){
+                auth.logout();
                 router.push({ name: 'login' });
             }
         }

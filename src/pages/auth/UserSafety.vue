@@ -8,7 +8,7 @@
             </div>
             
             <h3 style="margin: 0.5em 0;">修改名称</h3>
-            <el-form>
+            <el-form label-width="auto">
                 <el-form-item label="新名称">
                     <el-input v-model="username" />
                 </el-form-item>
@@ -18,8 +18,8 @@
                 <el-button type="primary" @click="doUpdateUsername">确认</el-button>
             </div>
 
-            <h3 style="margin: 0.5em 0;">修改密码</h3>
-            <el-form>
+            <h3 style="margin: -1.3em 0 0.5em 0;">修改密码</h3>
+            <el-form label-width="auto">
                 <el-form-item label="原始密码">
                     <el-input v-model="password0" type="password" />
                 </el-form-item>
@@ -54,6 +54,7 @@ import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { ElCol, ElRow, ElButton, ElForm, ElFormItem, ElInput, ElNotification } from 'element-plus';
 
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password0 = ref('');
@@ -61,6 +62,7 @@ const password1 = ref('');
 const password2 = ref('');
 
 const auth = useAuth();
+const router = useRouter();
 
 function doUserLogout(){
     axios({
@@ -102,26 +104,13 @@ function doUserLogout(){
 }
 
 function doUpdateUsername(){
-    
-}
-
-function doUpdatePassword(){
-    if(password1.value !== password2.value){
-        
-        ElNotification({
-            title: '修改失败',
-            message: '两次密码不一致',
-            type: 'warning',
-        });
-
-        return;
-    }
     axios({
-        url: 'http://43.143.171.43:9999/api/user/update',
+        url: 'http://43.143.171.43:9999/api/user/updateAuth',
         method: 'POST',
         data: {
             username: username.value,
-            password: password1.value
+            password: null,
+            token: auth.getToken()
         },
         withCredentials: true
     }).then((e: AxiosResponse) => {
@@ -132,8 +121,8 @@ function doUpdatePassword(){
             type: 'success',
         });
 
-        auth.setLogin(false);
-        auth.setToken('');
+        auth.logout();
+        router.push({ name: 'login' });
 
     }).catch((e: AxiosError) => {
         let response = e.response;
@@ -149,6 +138,66 @@ function doUpdatePassword(){
                 message: (response.data as ErrorResponse).message,
                 type: 'error',
             });
+
+            if(e.response?.status === 401){
+                auth.logout();
+                router.push({ name: 'login' });
+            }
+        }
+    })
+    
+}
+
+function doUpdatePassword(){
+    if(password1.value !== password2.value){
+        
+        ElNotification({
+            title: '修改失败',
+            message: '两次密码不一致',
+            type: 'warning',
+        });
+
+        return;
+    }
+    axios({
+        url: 'http://43.143.171.43:9999/api/user/updateAuth',
+        method: 'POST',
+        data: {
+            username: auth.currentUser.name,
+            password: password1.value,
+            token: auth.getToken()
+        },
+        withCredentials: true
+    }).then((e: AxiosResponse) => {
+
+        ElNotification({
+            title: '更新成功',
+            message: '',
+            type: 'success',
+        });
+
+        auth.logout();
+        router.push({ name: 'login' });
+
+    }).catch((e: AxiosError) => {
+        let response = e.response;
+        if(!response || !response.data){
+            ElNotification({
+                title: '未知错误',
+                message: '',
+                type: 'error',
+            });
+        } else {
+            ElNotification({
+                title: '更新失败',
+                message: (response.data as ErrorResponse).message,
+                type: 'error',
+            });
+
+            if(e.response?.status === 401){
+                auth.logout();
+                router.push({ name: 'login' });
+            }
         }
     })
 }

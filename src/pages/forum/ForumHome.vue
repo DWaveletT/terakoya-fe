@@ -114,8 +114,7 @@
     </div>
 
     <footer class="main-footer">
-            <p>由 HIT Touhou Team 基于 Element Plus 编写。保留所有权利。</p>
-            <p>2024 年 4 月 15 日。</p>
+        
     </footer>
 </template>
 
@@ -572,5 +571,6 @@ onMounted(() => {
     background-color: var(--el-color-primary-light-7);
 
     padding: 1em 0;
+    height: 60px;
 }
 </style>

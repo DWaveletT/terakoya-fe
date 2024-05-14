@@ -139,6 +139,7 @@ async function queryReplyList(){
                 type: 'error',
             });
             if(e.response?.status === 401){
+                auth.logout();
                 router.push({ name: 'login' });
             }
         }

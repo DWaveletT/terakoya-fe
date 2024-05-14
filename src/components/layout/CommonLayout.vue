@@ -29,8 +29,7 @@
         </div>
 
         <el-footer height="100px" class="footer">
-            <p>由 HIT Touhou Team 基于 Element Plus 编写。保留所有权利。</p>
-            <p>2024 年 4 月 15 日。</p>
+            
         </el-footer>
 
         <user-login v-model="showLogin" />
